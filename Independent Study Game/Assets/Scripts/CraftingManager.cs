@@ -9,10 +9,13 @@ public class CraftingManager : MonoBehaviour
 
     public Slot[] craftingSlots; //slots created for crafting slots
 
-    public List<Item> itemList;
-    public string[] recipes;
-    public Item[] recipeList;
+    public List<Item> ingredientsList, finalOrderList;
     public Slot result;
+    public Item resultingItem;
+    public OrderManager orderManager;
+    public Button craftButton;
+
+  
 
     public void OnMouseDownItem(Item item)
     {
@@ -28,7 +31,7 @@ public class CraftingManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+  
     }
 
     // Update is called once per frame
@@ -54,52 +57,36 @@ public class CraftingManager : MonoBehaviour
                 }
                 nearestSlot.gameObject.SetActive(true);
                 nearestSlot.GetComponent<Image>().sprite = currentItem.GetComponent<Image>().sprite;
-                itemList[nearestSlot.index] = currentItem;
+                finalOrderList[nearestSlot.index] = currentItem;
                 currentItem = null;
 
-                CheckForCompletedRecipies();
+
             }
         }
+
     }
 
-    void CheckForCompletedRecipies()
+    public void CheckForCompletedOrder()
     {
-        result.gameObject.SetActive(false);
-        result.item = null;
+        if (orderManager.CheckItem()) ClearList(); //if the order is crafted correctly clear the final order list
+    }
 
-        string currentRecipeString = "";
-
-        foreach (Item i in itemList)
+    private void ClearList()
+    {
+        for(int i = 0; i<finalOrderList.Count;i++)
         {
-            if (i != null)
-            {
-                currentRecipeString += i.itemName;
-            }
-            else
-            {
-                currentRecipeString += "null";
-            }
-        }
-
-        for(int i=0; i<recipes.Length;i++)
-        {
-            if (recipes[i] == currentRecipeString)
-            {
-                result.gameObject.SetActive(true);
-                result.GetComponent<Image>().sprite = recipeList[i].GetComponent<Image>().sprite;
-                result.item = recipeList[i];
-            }
+            finalOrderList[i] = null;
         }
     }
 
     public void OnClickSlot(Slot tempSlot)
     {
         tempSlot.item = null;
-        itemList[tempSlot.index] = null;
+        ingredientsList[tempSlot.index] = null;
         tempSlot.gameObject.SetActive(false);
-        CheckForCompletedRecipies();
     }
 
+   
  
 
 }
