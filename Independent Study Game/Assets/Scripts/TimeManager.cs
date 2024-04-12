@@ -6,7 +6,6 @@ public class TimeManager : MonoBehaviour
 {
     public Text timeRemainingText;
     private static float timeRemaining=30*60;
-    public GameObject pausePanel;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +25,7 @@ public class TimeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(timeRemaining>0&&!pausePanel.activeInHierarchy)
+        if(timeRemaining>0)
         {
             timeRemainingText.GetComponent<Text>().text = "Time Remaining: ";
             DisplayTime(timeRemaining);

@@ -15,9 +15,7 @@ public class CraftingManager : MonoBehaviour
     public OrderManager orderManager;
     public Button craftButton;
 
-    public GameObject[] setsOfIngredients;
-    public Button nextButton, prevButton;
-    private int setIndex = 0;
+  
 
     public void OnMouseDownItem(Item item)
     {
@@ -30,35 +28,10 @@ public class CraftingManager : MonoBehaviour
         }
     }
 
-    public void SetIndexIncrease()
-    {
-        setIndex++;
-
-        foreach(GameObject x in setsOfIngredients)
-        {
-            x.SetActive(false);
-        }
-
-        setsOfIngredients[setIndex].SetActive(true);
-
-    }
-
-    public void SetIndexDecrease()
-    {
-        setIndex--;
-
-        foreach (GameObject x in setsOfIngredients)
-        {
-            x.SetActive(false);
-        }
-
-        setsOfIngredients[setIndex].SetActive(true);
-    }
-
     // Start is called before the first frame update
     void Start()
     {
-
+  
     }
 
     // Update is called once per frame
@@ -90,20 +63,6 @@ public class CraftingManager : MonoBehaviour
 
             }
         }
-
-
-        nextButton.gameObject.SetActive(true);
-        prevButton.gameObject.SetActive(true);
-        if (setIndex == 0)
-            {
-                prevButton.gameObject.SetActive(false);
-            }
-
-            if (setIndex == (orderManager.numOfIngredientsAvailable/setsOfIngredients.Length)-1)
-            {
-            
-                nextButton.gameObject.SetActive(false);
-            }
 
     }
 

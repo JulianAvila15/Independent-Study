@@ -8,90 +8,49 @@ public class OrderManager : MonoBehaviour
 {
     public List<Item> listOfOrder = new List<Item>(); //List of lists of items
     public Item resultingItem;
-    public int numofOrdersCompleted=0,currentOrderIndex = 0, currLevel = 0, numOfOrdersInLevel = 0, maxOrderSize = 4, totalNumofOrders=0, numOfIngredientsAvailable
-        ,levelsNecessary=5;
+    public int numofOrdersCompleted=0,currentOrderIndex = 0, currLevel = 0, numOfOrdersInLevel = 0, maxOrderSize = 4, totalNumofOrders=0;
     public CraftingManager craftingMan; //Need access to the recipe list
     public Image itemSprite1,itemSprite2,itemSprite3,itemSprite4;
    
-    public int[] ordersToCompletePerLevel;
+    public int[] levels;
 
     public Text basicFeedback;
-
-    public Slider progressBar;
-
-    public GameObject newLevelProgressed;
-
 
     // Start is called before the first frame update
     void Start()
     {
-        numOfIngredientsAvailable = 5;
-        numOfOrdersInLevel = ordersToCompletePerLevel[currLevel];
+        numOfOrdersInLevel = levels[currLevel];
         CreateNewOrder();
         basicFeedback.gameObject.SetActive(false);
         FindTotalNumOfOrders();
-        progressBar.minValue = 0;
-        progressBar.maxValue = totalNumofOrders;
-    }
-
-    IEnumerator BasicFeedback()
-    {
-        basicFeedback.gameObject.SetActive(true);
-        if (CheckLists(listOfOrder, craftingMan.finalOrderList))//checks to see if the list of items in current order is equal to the final crafted order
-        {
-            
-            basicFeedback.GetComponent<Text>().text = "✔";
-            basicFeedback.GetComponent<Text>().color = new Color(0, 255, 0);
-        }
-        else
-        {
-     
-            basicFeedback.GetComponent<Text>().text = "X";
-            basicFeedback.GetComponent<Text>().color = new Color(255, 0, 0);
-        }
-        yield return new WaitForSeconds(1.0f);
-        basicFeedback.gameObject.SetActive(false);
-    }
-
-    IEnumerator NewLevelFeedback()
-    {
-        newLevelProgressed.SetActive(true);
-        yield return new WaitForSeconds(5.0f);
-        newLevelProgressed.SetActive(false);
     }
 
     private void FindTotalNumOfOrders()
     {
-        for(int i=0;i<ordersToCompletePerLevel.Length;i++)
+        for(int i=0;i<levels.Length;i++)
         {
-            totalNumofOrders += ordersToCompletePerLevel[i];
+            totalNumofOrders += levels[i];
         }
     }
 
     void GenerateNewLevel() //Need to pick from recipe list randomly for a certain amount of times per level (increment number of times selected as the amount of levels increase)
-    {
-        StartCoroutine(NewLevelFeedback());
-        if (currLevel < ordersToCompletePerLevel.Length)
+    { 
+        if (currLevel < levels.Length)
         {
             //Add the order into the new level
             currLevel++;
 
-
-
-
             //set current num of items to the current level
-            numOfOrdersInLevel = ordersToCompletePerLevel[currLevel];
-
-            if (currLevel < levelsNecessary)
-                numOfIngredientsAvailable += 5;
+            numOfOrdersInLevel = levels[currLevel];
         }
+
     }
 
     private void CreateNewOrder()
     {
         for (int i = 0; i < maxOrderSize; i++)
         {
-            listOfOrder.Add(craftingMan.ingredientsList[UnityEngine.Random.Range(0,numOfIngredientsAvailable-1)]);
+            listOfOrder.Add(craftingMan.ingredientsList[UnityEngine.Random.Range(0,craftingMan.ingredientsList.Count)]);
         }
     }
 
@@ -110,8 +69,9 @@ public class OrderManager : MonoBehaviour
         if (CheckLists(listOfOrder,craftingMan.finalOrderList))//checks to see if the list of items in current order is equal to the final crafted order
         {
             //Add some basic feedback to let the player know that they have successfully completed the order
-            StartCoroutine(BasicFeedback());
-
+            basicFeedback.gameObject.SetActive(true);
+            basicFeedback.GetComponent<Text>().text = "✔";
+            basicFeedback.GetComponent<Text>().color = new Color(0, 255, 0);
             Debug.Log("Correct Order");
 
 
@@ -121,10 +81,14 @@ public class OrderManager : MonoBehaviour
             //increment completed items
             numofOrdersCompleted++;
 
+            //clear the order list as you will be making a new one
             listOfOrder.Clear();
 
-            //clear the order list as you will be making a new one
-            ClearOrder();
+            for(int i=0;  i< craftingMan.craftingSlots.Length;i++)
+            {
+                craftingMan.craftingSlots[i].GetComponent<Image>().sprite = null;
+                craftingMan.craftingSlots[i].item = null;
+            }
 
             CreateNewOrder();
 
@@ -134,29 +98,19 @@ public class OrderManager : MonoBehaviour
                 GenerateNewLevel();
                 currentOrderIndex = 0;
             }
-
+             
             return true;
         }
         else
         {
             Debug.Log("Incorrect Order");
-            ClearOrder();
-            StartCoroutine(BasicFeedback());
+            basicFeedback.gameObject.SetActive(true);
+            basicFeedback.GetComponent<Text>().text = "X";
+            basicFeedback.GetComponent<Text>().color = new Color(255, 0, 0);
 
         }
       
         return false;
-    }
-
-    private void ClearOrder()
-    {
-       
-
-        for (int i = 0; i < craftingMan.craftingSlots.Length; i++)
-        {
-            craftingMan.craftingSlots[i].GetComponent<Image>().sprite = null;
-            craftingMan.craftingSlots[i].item = null;
-        }
     }
 
     // Update is called once per frame
@@ -170,7 +124,5 @@ public class OrderManager : MonoBehaviour
             itemSprite4.sprite = listOfOrder[3].GetComponent<Image>().sprite;
         }
 
-        
     }
 }
-

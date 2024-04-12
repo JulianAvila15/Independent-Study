@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
     public CraftingManager craftingManager;
     public Image pausePanel;
     public Button pauseAndContinueButton;
-    public Canvas mainCanvas,workIDCanvas;
 
     public enum ProgressFeedbackType
     {
@@ -24,8 +23,6 @@ public class GameManager : MonoBehaviour
         noTutorial
     }
 
-    
-
 
 
     public ProgressFeedbackType progressType;
@@ -33,8 +30,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //workIDCanvas.gameObject.SetActive(true);
-        //mainCanvas.gameObject.SetActive(false);
         pausePanel.gameObject.SetActive(false);
     }
 
