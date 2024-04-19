@@ -19,6 +19,9 @@ public class CraftingManager : MonoBehaviour
     public Button nextButton, prevButton;
     private int setIndex = 0;
 
+    
+    
+
     public void OnMouseDownItem(Item item)
     {
         if (currentItem == null)
@@ -129,6 +132,7 @@ public class CraftingManager : MonoBehaviour
         tempSlot.item = null;
         ingredientsList[tempSlot.index] = null;
         tempSlot.gameObject.SetActive(false);
+        tempSlot.item = currentItem;
     }
 
    

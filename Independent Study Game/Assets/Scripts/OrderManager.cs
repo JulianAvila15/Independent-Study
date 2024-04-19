@@ -21,6 +21,9 @@ public class OrderManager : MonoBehaviour
 
     public GameObject newLevelProgressed;
 
+    public Helper helper;
+
+    public TimeManager timeManager;
 
     // Start is called before the first frame update
     void Start()
@@ -56,8 +59,11 @@ public class OrderManager : MonoBehaviour
     IEnumerator NewLevelFeedback()
     {
         newLevelProgressed.SetActive(true);
+     
         yield return new WaitForSeconds(5.0f);
+        timeManager.ResetAFKTimer();
         newLevelProgressed.SetActive(false);
+        GenerateNewLevel();
     }
 
     private void FindTotalNumOfOrders()
@@ -70,7 +76,7 @@ public class OrderManager : MonoBehaviour
 
     void GenerateNewLevel() //Need to pick from recipe list randomly for a certain amount of times per level (increment number of times selected as the amount of levels increase)
     {
-        StartCoroutine(NewLevelFeedback());
+       
         if (currLevel < ordersToCompletePerLevel.Length)
         {
             //Add the order into the new level
@@ -84,6 +90,11 @@ public class OrderManager : MonoBehaviour
 
             if (currLevel < levelsNecessary)
                 numOfIngredientsAvailable += 5;
+
+            if(currLevel%2==1)
+            {
+                helper.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -105,7 +116,8 @@ public class OrderManager : MonoBehaviour
 
     public bool CheckItem()
     {
-
+        if (!craftingMan.finalOrderList.Contains(null))
+            timeManager.ResetAFKTimer();
 
         if (CheckLists(listOfOrder,craftingMan.finalOrderList))//checks to see if the list of items in current order is equal to the final crafted order
         {
@@ -131,7 +143,7 @@ public class OrderManager : MonoBehaviour
             if (currentOrderIndex >= numOfOrdersInLevel)
             {
                 Debug.Log("Level has been beaten");
-                GenerateNewLevel();
+                StartCoroutine(NewLevelFeedback());
                 currentOrderIndex = 0;
             }
 
@@ -144,7 +156,9 @@ public class OrderManager : MonoBehaviour
             StartCoroutine(BasicFeedback());
 
         }
+
       
+
         return false;
     }
 

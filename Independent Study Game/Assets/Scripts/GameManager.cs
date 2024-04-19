@@ -7,8 +7,9 @@ public class GameManager : MonoBehaviour
     public OrderManager orderManager;
     public CraftingManager craftingManager;
     public Image pausePanel;
-    public Button pauseAndContinueButton;
+    public Button pauseButton,continueButton;
     public Canvas mainCanvas,workIDCanvas;
+    
 
     public enum ProgressFeedbackType
     {
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        pauseAndContinueButton.GetComponentInChildren<Text>().text = pausePanel.IsActive() ? "Continue" : "Pause";//If the pause panel is active make text say "continue", other wise it should say "pause"
+        
 
         if(Input.GetKeyDown(KeyCode.P)) //Alternative way instead of using button
         {
@@ -52,8 +53,15 @@ public class GameManager : MonoBehaviour
     public void Pause()//Pauses game
     {
         if (pausePanel.IsActive())
+        {
             pausePanel.gameObject.SetActive(false);
+            pauseButton.gameObject.SetActive(true);
+        }
         else
+        {
             pausePanel.gameObject.SetActive(true);
+            pauseButton.gameObject.SetActive(false);
+
+        }
     }
 }
