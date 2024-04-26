@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
+
 public class Helper : MonoBehaviour
 {
     Transform helperTransform;
@@ -37,29 +40,67 @@ public class Helper : MonoBehaviour
         //get the Input from Vertical axis
         float verticalInput = Input.GetAxis("Vertical");
 
+        //Depending upon the name, they will do something specific
+
+        switch(gameObject.name)
+        {
+            case "MessengerBoy":
+                Messenger();
+                break;
+            case "Penguin":
+                Penguin();
+                break;
+        }
+            
+
+        if (gameObject.name == "MessengerBoy")
+        {
+            Messenger();
+        }
+
+        if (gameObject.name=="Penguin")
+        {
+
+        }
 
 
-        //movement of helper character
-        if ((helperTransform.position.x >= tilePosition.position.x || helperTransform.position.x >= tilePosition2.position.x) && selectedTile.activeInHierarchy)
-        {
-            helperTransform.position = helperTransform.position;
-           // Debug.Log("true");
-            StartCoroutine(PauseSeconds());
-        }
-        else if (helperTransform.position.x < tilePosition.position.x || helperTransform.position.x < tilePosition2.position.x)
-            helperTransform.position = helperTransform.position + new Vector3(movementSpeed * Time.deltaTime, 0, 0);
-      
-        else 
-        {
-            helperTransform.position = helperTransform.position + new Vector3(movementSpeed * Time.deltaTime, 0, 0);
-        }
-      
-        if(helperTransform.position.x>=rightBound)
+
+        if (helperTransform.position.x >= rightBound)
         {
             helperTransform.position = originPosition;
             gameObject.SetActive(false);
         }
 
+    }
+
+    private void Penguin()
+    {
+        movementSpeed = 5f;
+        if (helperTransform.position.x < tilePosition.position.x || helperTransform.position.x < tilePosition2.position.x)
+            helperTransform.position = helperTransform.position + new Vector3(movementSpeed * Time.deltaTime, 0, 0);
+        else
+        {
+            helperTransform.position = helperTransform.position + new Vector3(movementSpeed * Time.deltaTime, 0, 0);
+        }
+    }
+
+    private void Messenger()
+    {
+        float movementSpeed = 3f;
+        //movement of helper character
+        if ((helperTransform.position.x >= tilePosition.position.x || helperTransform.position.x >= tilePosition2.position.x) && selectedTile.activeInHierarchy)
+        {
+            helperTransform.position = helperTransform.position;
+            // Debug.Log("true");
+            StartCoroutine(PauseSeconds());
+        }
+        else if (helperTransform.position.x < tilePosition.position.x || helperTransform.position.x < tilePosition2.position.x)
+            helperTransform.position = helperTransform.position + new Vector3(movementSpeed * Time.deltaTime, 0, 0);
+
+        else
+        {
+            helperTransform.position = helperTransform.position + new Vector3(movementSpeed * Time.deltaTime, 0, 0);
+        }
     }
 
     IEnumerator PauseSeconds()

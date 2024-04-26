@@ -23,8 +23,8 @@ public class TimeManager : MonoBehaviour
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
         string timeDisplay;
 
-        timeDisplay = string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
-        timeRemainingText.text += string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
+        timeDisplay = "AFK Timer: " + string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
+        timeRemainingText.text +=  string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
 
         return timeDisplay;
     }

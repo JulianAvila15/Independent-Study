@@ -6,7 +6,8 @@ public class QuickTime : MonoBehaviour
 {
     public float GoodRange; //.51 - .57
     public Slider slider;
-    private bool reachedMax;
+    private bool reachedMax,stop;
+    public Button stopButton;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,33 +18,45 @@ public class QuickTime : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
-
-        if (slider.value == slider.maxValue)
-            reachedMax = true;
-        if (slider.value <= slider.maxValue && !reachedMax)
+        if (stop == false)
         {
-            slider.value += (.1f / 60);
-            
+
+            if (slider.value == slider.maxValue)
+                reachedMax = true;
+            if (slider.value == slider.minValue)
+                reachedMax = false;
+            if (slider.value <= slider.maxValue && !reachedMax)
+            {
+                slider.value += (.1f / 30);
+            }
+
+            if (slider.value >= slider.minValue && reachedMax)
+            {
+                slider.value -= (.1f / 30);
+            }
+            else if (reachedMax == true)
+            {
+                reachedMax = false;
+            }
 
         }
+
        
 
 
-        if (slider.value >= slider.minValue && reachedMax)
+    }
+
+    public void StopButton()
+    {
+        stop = true;
+
+        if (slider.value > .51 && slider.value < .60)
         {
-            slider.value -= (.1f / 60);
+            Debug.Log("Correct timing!");
         }
-        else if (reachedMax == true)
+        else
         {
-            reachedMax = false;
+            Debug.Log("Incorrect timing!");
         }
-
-      
-
-
-
-
     }
 }

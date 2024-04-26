@@ -9,6 +9,7 @@ public class TutorialManager : MonoBehaviour
     public Button continueButton;
     public GameObject tutorialPanel;
     public TMP_Text textbox;
+    public TimeManager timeManager;
     public ProgressiveDisclosureHandler progressiveDisclosure;
     // Start is called before the first frame update
     void Start()
@@ -50,9 +51,12 @@ public class TutorialManager : MonoBehaviour
                 break;
             case GameManager.TutorialType.noTutorial:
                 break;
-        }
 
-      
+               
+        }
+        timeManager.enabled = true;
+
+
     }
 
     //potential progressive disclosure function
