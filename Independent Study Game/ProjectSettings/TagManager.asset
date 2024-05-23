@@ -5,6 +5,16 @@ TagManager:
   serializedVersion: 2
   tags:
   - validator
+  - Messenger
+  - Penguin
+  - Dragon
+  - Fireball
+  - Obstacle
+  - Score
+  - Ground
+  - Main Game
+  - FxTemporaire
+  - WorkCanvas
   layers:
   - Default
   - TransparentFX
@@ -41,4 +51,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: l
+    uniqueID: 395003281
     locked: 0

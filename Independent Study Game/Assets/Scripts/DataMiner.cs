@@ -16,16 +16,20 @@ public class DataMiner : MonoBehaviour
     List<string> questLogStrings = new List<string>();
     string logString = "";
     StreamWriter file;
-    int totalIngredientClicks = 0;
-    int questIngredientClicks = 0;
     KeyValuePair<int, int> currentTime;
     string adjustedTimeStamp = "";
+    public static int totalClicks;
     public static int numberOfLogableQuests = 0;
     public static string workerID = "";
     bool dataHasBeenSent = false;
     private static int questCompleted;
-    
-  
+
+    public static int[] abilityCount = { 0, 0, 0 };//Keep track of ability/summon count
+    public static int[] quickTimeCount = { 0, 0, 0 };//Keep track of mini game count
+    public static string progressFeedbackMode, tutorialMode;//Keep track of game modes
+    public static int numOfIngredientClicks=0,numOfCrafts=0,numOfSuccessfulCrafts=0,numOfFailedCrafts=0,currLevel=0;//game variables
+    public static string totalTime="-1";//Keep track of timing
+    public static string[] timeSpentOnEachLevel = { "-1", "-1", "-1", "-1", "-1" , "-1" , "-1" , "-1" , "-1" , "-1" };
 
     GameManager gameManager;
 
@@ -41,8 +45,7 @@ public class DataMiner : MonoBehaviour
 
     public void AddClickToLog()
     {
-        totalIngredientClicks++;
-        questIngredientClicks++;
+        totalClicks++;
     }
 
     public void LogQuestCompletion(bool completed = true)
@@ -50,74 +53,40 @@ public class DataMiner : MonoBehaviour
         //AdjustTimeStamp(ref questLog);
 
         string questString = adjustedTimeStamp + ",";
-        questString += questIngredientClicks + ",";
         //questString += GameManager.gameManager.GetDifficultyAverage() + ",";
         questString += completed + ",";
         if (completed) { questCompleted++; }
 
         
         questLogStrings.Add(questString);
-        questIngredientClicks = 0;
+        totalClicks = 0;
 
         
     }
 
-    ////Stores timeStamp, modifies adjustedTime to reflect time stamp in seconds
-    //void AdjustTimeStamp(ref List<KeyValuePair<int, int>> log)
-    //{
-    //    currentTime = GameManager.gameManager.TimeStamp();
-    //    if (log.Count == 0) log.Add(GameManager.gameManager.TimeStamp());
-    //    else
-    //    {
-    //        int minute = currentTime.Key - log[log.Count - 1].Key;
-    //        int second = currentTime.Value - log[log.Count - 1].Value;
-    //        log.Add(new KeyValuePair<int, int>(minute, second));
-    //    }
-    //    int numberOfSeconds = currentTime.Value + (currentTime.Key * 60);
-    //    adjustedTimeStamp = numberOfSeconds.ToString();
-    //}
 
-    //ID, timeStamp, pointerVersion, logVersion, funnyVersion, totalTime, totalPauseTime, totalDeaths,
-    //totalAverageDifficulty, questsCompleted, q1Time, q1Deaths, q1AvgDifficulty, q1Complete, q1NpcInteractions, q1NpcsInteractedWith...
-    /*public void logdata()
+    public void logdata()
     {
-        string positionlogstring = workerid + "," + datetime.now + ",";
-        foreach (vector2 pos in positionlog)
+        string positionlogstring = workerID + "," + DateTime.Now + ",";
+       
+        if (!dataHasBeenSent)
         {
-            int tempx = mathf.roundtoint(pos.x);
-            int tempy = mathf.roundtoint(pos.y);
-            positionlogstring += tempx + ":" + tempy + "|";
+            dataHasBeenSent = true;
+            logString += workerID + "," + DateTime.Now + "," + progressFeedbackMode + ","
+                + tutorialMode + "," + numOfIngredientClicks + ","+numOfCrafts+","+ numOfSuccessfulCrafts+","+numOfFailedCrafts+","+currLevel;
+
+            for (int i = 0; i < abilityCount.Length; i++)
+                logString += ", " + abilityCount[i];
+            for (int i = 0; i < quickTimeCount.Length; i++)
+                logString += ", " + quickTimeCount[i];
+            for (int i = 0; i < timeSpentOnEachLevel.Length; i++)
+                logString += ", " + timeSpentOnEachLevel[i];
+
+            Debug.Log(logString);
+            StartCoroutine(WriteTextViaPHP(logString, "https://gamesux.com/fromunity_cookingcrafting.php")); //change php to game name (tbd)
+         
         }
-        debug.log(positionlogstring);
-        if (!datahasbeensent)
-        {
-            datahasbeensent = true;
-            logstring += workerid + "," + datetime.now + "," + gamemanager.gamemanager.questpointerversion() + ","
-                + gamemanager.gamemanager.questlogversion() + "," + gamemanager.gamemanager.funnyversion() + ",";
-            list<keyvaluepair<int, int>> blank = new list<keyvaluepair<int, int>>();
-            adjusttimestamp(ref blank);
-                           totaltime 
-            logstring += adjustedtimestamp + "," + gamemanager.gamemanager.getpausetime() + "," +
-                totaldeaths + "," + gamemanager.gamemanager.getfinaldifficultyaverage() + "," +
-                questcompleted + ",";
-
-            for all quests incomplete, adds default values in their place
-            if (questlogstrings.count < numberoflogablequests)
-            {
-                logquestcompletion(false);
-                while (questlogstrings.count < numberoflogablequests)
-                {
-                    questlogstrings.add(-1 + "," + -1 + "," + -1 + "," + "false, " + -1 + "," + -1 + ",");
-                }
-            }
-
-            adds quest data to final log string
-            foreach (string s in questlogstrings) { logstring += s; }
-
-            startcoroutine(writetextviaphp(logstring, "https://gamesux.com/fromunity_slidingblock.php"));
-            startcoroutine(writetextviaphp(positionlogstring, "https://gamesux.com/slidingblock_location.php"));
-        }
-    }*/
+    }
 
 
     IEnumerator WriteTextViaPHP(string data, string destination)
@@ -126,12 +95,14 @@ public class DataMiner : MonoBehaviour
         form.AddField("data", data);
         UnityWebRequest www = UnityWebRequest.Post(destination, form);
         if (Application.platform != RuntimePlatform.WebGLPlayer)
-            www.SetRequestHeader("User-Agent", "Unity 2019");
-        www.SendWebRequest();
-        yield return www.isDone;
-        if (www.isNetworkError || www.isHttpError)
+            www.SetRequestHeader("User-Agent", "Unity 2020.3");
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.ConnectionError ||
+            www.result == UnityWebRequest.Result.ProtocolError)
         {
-            Debug.Log(www.error);
+            Debug.Log($"Error: {www.error}\nResponse Code: {www.responseCode}\nURL: {destination}");
         }
         else
         {

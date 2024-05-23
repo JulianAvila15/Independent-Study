@@ -7,6 +7,11 @@ public class UIManager : MonoBehaviour
     public GameManager gameManager;
     public Text numOrderDisplay,levelsOutOfRemaining;
     public Slider progressBar;
+
+    public Text numOrderDisplayCollectingGame;
+    public Slider progeressBarCollectingGame;
+
+   public GameObject mainGame, collectingMiniGame;
    
     // Start is called before the first frame update
     void Start()
@@ -20,12 +25,31 @@ public class UIManager : MonoBehaviour
         switch (gameManager.progressType)
         {
             case GameManager.ProgressFeedbackType.score:
-                numOrderDisplay.gameObject.SetActive(true);
-                numOrderDisplay.GetComponent<Text>().text = "Order: " + (gameManager.orderManager.numofOrdersCompleted + 1); //if progress feed back type is score
-                break;
+                if (mainGame.activeInHierarchy)
+                {
+                    numOrderDisplay.gameObject.SetActive(true);
+                    numOrderDisplay.GetComponent<Text>().text = "Order: " + (gameManager.orderManager.numofOrdersCompleted + 1); //if progress feed back type is score
+                }
+
+                if (collectingMiniGame.activeInHierarchy)
+                {
+                    numOrderDisplayCollectingGame.gameObject.SetActive(true);
+                    numOrderDisplayCollectingGame.GetComponent<Text>().text = "Coins Collected: " + (CollectingGameManager.coinsCollected);
+                }
+
+               break;
             case GameManager.ProgressFeedbackType.progressBar:
-                progressBar.gameObject.SetActive(true); //if progress feedback type is progress bar
-                progressBar.value = gameManager.orderManager.numofOrdersCompleted;
+                if (mainGame.activeInHierarchy)
+                {
+                    progressBar.gameObject.SetActive(true); //if progress feedback type is progress bar
+                    progressBar.value = gameManager.orderManager.numofOrdersCompleted;
+                }
+
+                if(collectingMiniGame.activeInHierarchy)
+                {
+                    progeressBarCollectingGame.gameObject.SetActive(true); //if progress feedback type is progress bar
+                    progeressBarCollectingGame.value = CollectingGameManager.coinsCollected;
+                }
                 break;
             case GameManager.ProgressFeedbackType.noScoreOrProgressBar:
                 break;
@@ -34,7 +58,7 @@ public class UIManager : MonoBehaviour
 
 
         if(gameManager.orderManager.currLevel<5)
-        levelsOutOfRemaining.text = "Current level: "+(gameManager.orderManager.currLevel+1) + "  / " + (gameManager.orderManager.ordersToCompletePerLevel.Length+1); //show which level the player is on until the player finishes more than 5 levels
+        levelsOutOfRemaining.text = "Levels Completed: "+(gameManager.orderManager.currLevel+1) + "  / " + 5; //show which level the player is on until the player finishes more than 5 levels
         
     }
 }

@@ -5,9 +5,13 @@ using UnityEngine.UI;
 public class TimeManager : MonoBehaviour
 {
     public Text timeRemainingText;
-    private static float timeRemaining=30*60;
-    private static float afkTimer = 15 * 60;
-    public GameObject pausePanel, afkWarning;
+    public static float timeRemaining=30*60;
+    public static float afkTimer = 15f;
+    public GameObject pausePanel, tutorialPanel, WorkIDPanel, afkWarning,powerUpTutorialPanel,collectingGame,quickTime,newLevelFeedBack,endGameScreen;
+    static bool  showAFKWarning=true;
+    public OrderManager orderManager;
+    public GameObject mainGame;
+    public DataMiner dataMiner; 
 
     // Start is called before the first frame update
     void Start()
@@ -15,7 +19,7 @@ public class TimeManager : MonoBehaviour
         
     }
 
-    string DisplayTime(float timeToDisplay)
+   public string DisplayTime(float timeToDisplay)
     {
         timeToDisplay += 1;
 
@@ -23,8 +27,12 @@ public class TimeManager : MonoBehaviour
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
         string timeDisplay;
 
-        timeDisplay = "AFK Timer: " + string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
-        timeRemainingText.text +=  string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
+        timeDisplay = string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
+
+        if (mainGame.activeInHierarchy)
+        {
+            timeRemainingText.text = "Time Remaining: \n"+string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
+        }
 
         return timeDisplay;
     }
@@ -33,37 +41,62 @@ public class TimeManager : MonoBehaviour
     void Update()
     {
 
+        DisplayTime(timeRemaining);
+
         if (pausePanel.activeInHierarchy)
             ResetAFKTimer();
 
-        if(timeRemaining>0&&!pausePanel.activeInHierarchy)
+        if(timeRemaining>0 && !WorkIDPanel.activeInHierarchy &&!pausePanel.activeInHierarchy && !tutorialPanel.activeInHierarchy&&!powerUpTutorialPanel.activeInHierarchy)
         {
             timeRemainingText.GetComponent<Text>().text = "Time Remaining: ";
-            DisplayTime(timeRemaining);
+           
             timeRemaining -= Time.deltaTime;
         }
 
+        if(timeRemaining<=0 && orderManager.currLevel>=5)
+        {
+            DataMiner.currLevel = orderManager.currLevel;
+            GameManager.gameOver = true;
+            
+            if(collectingGame.activeInHierarchy)
+            {
+                collectingGame.SetActive(false);
+                mainGame.SetActive(true);
+            }
 
-        if (afkTimer > 0&&!pausePanel.activeInHierarchy)
+            DataMiner.totalTime = DisplayTime(timeRemaining);
+            endGameScreen.SetActive(true);
+
+            //log the data once done
+            dataMiner.logdata();
+        }
+
+
+
+        if (afkTimer > 0 && (!pausePanel.activeInHierarchy && !tutorialPanel.activeInHierarchy && !WorkIDPanel.activeInHierarchy &&  !newLevelFeedBack.activeInHierarchy&&!endGameScreen.activeInHierarchy && !collectingGame.activeInHierarchy&& !powerUpTutorialPanel.activeInHierarchy))
         {
             afkTimer -= Time.deltaTime;
-            Debug.Log(DisplayTime(afkTimer));
+           
         }
-        else if(afkTimer>(5*60)&& !pausePanel.activeInHierarchy)//if there are 5 minutes of the timer left
+         if(afkTimer<=0)
         {
-            afkWarning.SetActive(true);
+            pausePanel.SetActive(true);
         }
+
+  
 
     }
 
-    public void ResetAFKTimer()
+    public static void ResetAFKTimer()
     {
-        afkTimer = 15 * 60;
+        afkTimer = 15f;
+        showAFKWarning = true;
     }
 
     public void CloseAFKWarning()
     {
         afkWarning.SetActive(false);
+        showAFKWarning = false;
     }
 
 }
