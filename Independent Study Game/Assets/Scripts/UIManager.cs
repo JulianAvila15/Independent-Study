@@ -5,13 +5,14 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public GameManager gameManager;
-    public Text numOrderDisplay,levelsOutOfRemaining;
+    public GameObject numOrderDisplay;
     public Slider progressBar;
 
-    public Text numOrderDisplayCollectingGame;
+    public GameObject numOrderDisplayCollectingGame;
     public Slider progeressBarCollectingGame;
 
    public GameObject mainGame, collectingMiniGame;
+
    
     // Start is called before the first frame update
     void Start()
@@ -28,13 +29,13 @@ public class UIManager : MonoBehaviour
                 if (mainGame.activeInHierarchy)
                 {
                     numOrderDisplay.gameObject.SetActive(true);
-                    numOrderDisplay.GetComponent<Text>().text = "Order: " + (gameManager.orderManager.numofOrdersCompleted + 1); //if progress feed back type is score
+                    numOrderDisplay.GetComponentInChildren<Text>().text = "Orders completed: " + (gameManager.orderManager.numofOrdersCompleted); //if progress feed back type is score
                 }
 
                 if (collectingMiniGame.activeInHierarchy)
                 {
                     numOrderDisplayCollectingGame.gameObject.SetActive(true);
-                    numOrderDisplayCollectingGame.GetComponent<Text>().text = "Coins Collected: " + (CollectingGameManager.coinsCollected);
+                    numOrderDisplayCollectingGame.GetComponentInChildren<Text>().text = "Coins Collected: " + (CollectingGameManager.coinsCollected);
                 }
 
                break;
@@ -42,7 +43,17 @@ public class UIManager : MonoBehaviour
                 if (mainGame.activeInHierarchy)
                 {
                     progressBar.gameObject.SetActive(true); //if progress feedback type is progress bar
-                    progressBar.value = gameManager.orderManager.numofOrdersCompleted;
+
+                    progressBar.maxValue = gameManager.orderManager.ordersToCompletePerLevel[gameManager.orderManager.currLevel];
+
+                    if (gameManager.orderManager.numofOrdersCompleted>=progressBar.maxValue)
+                    {
+                        progressBar.value = gameManager.orderManager.numofOrdersCompleted = gameManager.orderManager.currentOrderIndex = 0;
+                    }
+                    else
+                    {
+                        progressBar.value = gameManager.orderManager.numofOrdersCompleted;
+                    }
                 }
 
                 if(collectingMiniGame.activeInHierarchy)
@@ -57,8 +68,6 @@ public class UIManager : MonoBehaviour
         }
 
 
-        if(gameManager.orderManager.currLevel<5)
-        levelsOutOfRemaining.text = "Levels Completed: "+(gameManager.orderManager.currLevel+1) + "  / " + 5; //show which level the player is on until the player finishes more than 5 levels
         
     }
 }

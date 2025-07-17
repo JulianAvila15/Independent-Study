@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class Helper : MonoBehaviour
 {
-    Transform helperTransform;
+    public Transform helperTransform;
     Animator helperAnimator;
     float movementSpeed= 1f;
     public GameObject[] slotTriggers,slots;
@@ -19,8 +19,9 @@ public class Helper : MonoBehaviour
     Transform tilePosition;
     public OrderManager orderManager;
     public CraftingManager craftingManager;
+    public ProgressiveDisclosureHandler pdManager;
     int slotIndex;
-    int rightBound = 13, leftBound=-14;
+   public int rightBound = 13, leftBound=-14;
     private Vector3 originPosition,dragonTriggerPosition;
 
     float ceil;
@@ -29,9 +30,15 @@ public class Helper : MonoBehaviour
     public GameObject fireBallSpawn;
     public Image fireImage;
 
-    public static bool shownIngredient = false;
+    public static bool penguinHasShownIngredient = false;
     bool hasShot = false;
+  private static  Color iceBlue = new Color(0.69f, 1f, 1f);
 
+    public bool summonedReachedPDTutorialDestination=false;
+    public bool summonedCanContinuePDTutorial = false;
+
+    public Abilities abilityManager;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +59,7 @@ public class Helper : MonoBehaviour
             else
             {
                 slotIndex = 1;
-                shownIngredient = false;
+                penguinHasShownIngredient = false;
                 CraftingManager.penguinSlot = slotIndex;
             }
 
@@ -105,19 +112,23 @@ public class Helper : MonoBehaviour
 
 
 
-        if ((gameObject.tag == "Messenger" || gameObject.tag == "Penguin") && helperTransform.position.x >= rightBound)
+        if ((gameObject.tag == "Messenger" || gameObject.tag == "Penguin") && helperTransform.position.x >= rightBound+10|| helperTransform.position.x <= leftBound-10)
         {
-            GameObject.Destroy(gameObject);
-            //foreach (GameObject x in slotTriggers)
-            //{
-            //    x.gameObject.SetActive(true);
-            //}
-        }
-        else if (helperTransform.position.x <= leftBound)
-        {
-            dragonTrigger.SetActive(true);
-            GameObject.Destroy(gameObject);
-          
+
+            if (!ProgressiveDisclosureHandler.abilityTutorialTriggered)
+                Destroy(gameObject);
+            else
+            {
+                helperTransform.position = originPosition;
+                summonedCanContinuePDTutorial = false;
+            }
+
+            if(dragonTrigger!=null&&dragonTrigger.activeInHierarchy==false)
+            {
+                dragonTrigger.SetActive(true);
+            }
+
+
         }
 
 
@@ -182,7 +193,6 @@ public class Helper : MonoBehaviour
                 helperTransform.position += new Vector3(0, -movementSpeed * Time.deltaTime, 0);
                 helperAnimator.SetBool("Jump", true);
             }
-            // Debug.Log("true");
             StartCoroutine(PauseSeconds());
         }
       
@@ -199,54 +209,61 @@ public class Helper : MonoBehaviour
     {
 
             movementSpeed = 6f;
+
+
+        if (craftingManager.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || (summonedCanContinuePDTutorial|| !summonedReachedPDTutorialDestination)|| pdManager.completedTutorials.Contains("Penguin"))
             helperTransform.position = helperTransform.position + new Vector3(movementSpeed * Time.deltaTime, 0, 0);
+       
 
-      
 
-        if (helperTransform.position.x >= rightBound-10 &&!shownIngredient)
+        if (helperTransform.position.x >= rightBound-10)
         {
-            
-            //Display the item set the in item set 
-            craftingManager.setIndex = (int)Mathf.Floor(((craftingManager.ingredientsList.IndexOf(orderManager.listOfOrder[slotIndex])) / 5));
-            foreach (GameObject x in craftingManager.setsOfIngredients)
+
+
+            //in progressive disclosure tutorial
+            if (craftingManager.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || !summonedReachedPDTutorialDestination)
             {
-                x.SetActive(false);
+                Debug.Log("summon reached destination");
+                summonedReachedPDTutorialDestination = true;
+                Debug.Log(summonedReachedPDTutorialDestination);
+            }
+
+            //Display the item set the in item set 
+            craftingManager.setIndex = (int)Mathf.Floor(((craftingManager.ingredientsList.IndexOf(orderManager.listOfOrder[slotIndex])) / (craftingManager.setsOfIngredients.Length-1)));
+            foreach (GameObject setOfAllIngredientsAccessible in craftingManager.setsOfIngredients)
+            {
+                setOfAllIngredientsAccessible.SetActive(false);
             }
 
           
 
             craftingManager.setsOfIngredients[craftingManager.setIndex].SetActive(true);
-            craftingManager.craftingSlots[slotIndex].GetComponent<Image>().color = new Color(0, 255, 0);
-            GameObject.Find(orderManager.listOfOrder[slotIndex].name).GetComponent<Image>().color = new Color(0, 255, 0);
+
+            craftingManager.craftingSlots[slotIndex].GetComponent<Image>().color =iceBlue;
+
+            GameObject.Find(orderManager.listOfOrder[slotIndex].name).GetComponent<Image>().color = iceBlue;
             CraftingManager.helperIsActive = false;
+            penguinHasShownIngredient = true;
 
-            //if (craftingManager.craftingSlots[slotIndex].item != null)
-            //{
 
-            //    craftingManager.craftingSlots[slotIndex].GetComponent<Image>().color = new Color(255, 255, 255);
-            //    GameObject.Find(orderManager.listOfOrder[slotIndex].name).GetComponent<Image>().color = new Color(255, 255, 255);
-            //    shownIngredient = true;
-            //}
 
-            if(shownIngredient==false)
-            StartCoroutine(ResetToNormalColor());
+            ResetToNormalColor();
 
 
         }
 
     }
 
-    private IEnumerator ResetToNormalColor()
+    private void ResetToNormalColor()
     {
-        if (shownIngredient == true)
+        if (craftingManager.craftingSlots[slotIndex].item!=null && craftingManager.craftingSlots[slotIndex].item.itemName==orderManager.listOfOrder[slotIndex].itemName)
         {
-            shownIngredient=false;
-            yield return 0;
+            craftingManager.craftingSlots[slotIndex].GetComponent<Image>().color = new Color(255, 255, 255);
+            GameObject.Find(orderManager.listOfOrder[slotIndex].name).GetComponent<Image>().color = new Color(255, 255, 255);
+            
         }
-        yield return new WaitForSeconds(5f);
-        craftingManager.craftingSlots[slotIndex].GetComponent<Image>().color = new Color(255, 255, 255);
-        GameObject.Find(orderManager.listOfOrder[slotIndex].name).GetComponent<Image>().color = new Color(255, 255, 255);
-        shownIngredient = true;
+    
+  
     }
 
     //MessengerBoy Script
@@ -260,10 +277,8 @@ public class Helper : MonoBehaviour
 
             if (craftingManager.craftingSlots[0].item == orderManager.listOfOrder[0])
             {
-                Debug.Log("true");
                 craftingManager.craftingSlots[0].item.GetComponent<Image>().color = new Color(18.8f, 83.5f, 78.4f);
             }
-            // Debug.Log("true");
             StartCoroutine(PauseSeconds());
 
         }

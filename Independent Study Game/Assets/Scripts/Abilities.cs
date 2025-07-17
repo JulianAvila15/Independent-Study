@@ -10,12 +10,15 @@ public class Abilities : MonoBehaviour
 
     public CraftingManager craftingMan;
     public GameManager gameManager;
+    public ProgressiveDisclosureHandler pdHandler;
     public Image abilityImage1;
     public Image abilityImage2;
     public Image abilityImage3;
 
+    public GameObject newLevelAlert,powerUpTutorialPanel;
+
     public GameObject[] powerUps;
-    GameObject createdObject;
+    public GameObject createdObject;
     [Header("Ability1")]
     public float coolDown1;
     bool isCoolDown1 = false;
@@ -37,6 +40,9 @@ public class Abilities : MonoBehaviour
     public DataMiner miner;
     Vector3 spawnPosition,dragonPosition;
 
+    bool firstTimeClicked=false, secondTimeClicked=false;
+   
+
     private void Awake()
     {
         for(int i=0; i<powerUps.Length;i++)
@@ -48,9 +54,7 @@ public class Abilities : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        abilityImage1.fillAmount = 0;
-        abilityImage2.fillAmount = 0;
-        abilityImage3.fillAmount = 0;
+        abilityImage1.fillAmount = abilityImage2.fillAmount = abilityImage3.fillAmount = 0;
 
         
         spawnPosition =new Vector3(-12.13f, -2.4f, 0);
@@ -62,118 +66,148 @@ public class Abilities : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
             //messenger
-            Ability1();
+            TriggerAbility1();
             //penguin
-            Ability2();
+            TriggerAbility2();
             //dragon
-            Ability3();   
+            TriggerAbility3();   
     }
 
 
-    void Ability1()
+    void TriggerAbility1()
     {
         
         
             if ((Input.GetKey(ability1) || pressed1) && isCoolDown1 == false)
             {
-                isCoolDown1 = true;
-                abilityImage1.fillAmount = 1;
-                createdObject = Instantiate(powerUps[0], spawnPosition, Quaternion.identity);
-                createdObject.transform.parent = GameObject.FindGameObjectWithTag("Main Game").transform;
-                createdObject.gameObject.SetActive(true);
-                DataMiner.abilityCount[0]++;
-            }
+            isCoolDown1 = true;
+            ExecuteAbility(powerUps[0], abilityImage1, isCoolDown1, spawnPosition);
+
+             }
 
 
             if (isCoolDown1 == true)
             {
-                abilityImage1.fillAmount -= 1 / coolDown1 * Time.deltaTime;
-
-                if (abilityImage1.fillAmount <= 0)
-                {
-                    abilityImage1.fillAmount = 0;
-                    isCoolDown1 = false;
-                    pressed1 = false;
-                }
+            if (!(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
+                CoolDown(abilityImage1, coolDown1, ref isCoolDown1, ref pressed1);
             }
         
     }
 
-    void Ability2()
+    void TriggerAbility2()
     {
         if ((Input.GetKey(ability2) || pressed2) && isCoolDown2 == false)
         {
             isCoolDown2 = true;
-            abilityImage2.fillAmount = 1;
-            createdObject = Instantiate(powerUps[1], spawnPosition, Quaternion.identity);
-            createdObject.transform.parent = GameObject.FindGameObjectWithTag("Main Game").transform;
-            createdObject.gameObject.SetActive(true);
-            DataMiner.abilityCount[1]++;
+            ExecuteAbility(powerUps[1], abilityImage2, isCoolDown2, spawnPosition);
+
+            if (firstTimeClicked)
+            {
+                Debug.Log("summon set");
+                Helper setHelper = createdObject.GetComponent<Helper>();
+                pdHandler.SetSummon(ref setHelper);
+                pdHandler.AdvanceAbilityStep();
+                Debug.Log("clicked for the first time");
+            }
+
         }
 
-
-        if (isCoolDown2 == true)
+        if (pdHandler.completedTutorials.Contains("Penguin"))
         {
-            abilityImage2.fillAmount -= 1 / coolDown1 * Time.deltaTime;
-
-            if (abilityImage2.fillAmount <= 0)
+            if (isCoolDown2 == true)
             {
-                abilityImage2.fillAmount = 0;
-                isCoolDown2 = false;
-                pressed2 = false;
-                
+                if (!(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
+                    CoolDown(abilityImage2, coolDown2, ref isCoolDown2, ref pressed2);
             }
         }
     }
 
-    private void Ability3()
+    private void TriggerAbility3()
     {
         if ((Input.GetKey(ability3) || pressed3) && isCoolDown3 == false)
         {
             isCoolDown3 = true;
-            abilityImage3.fillAmount = 1;
-        
-            createdObject = Instantiate(powerUps[2], dragonPosition, Quaternion.identity);
-            createdObject.transform.parent = GameObject.FindGameObjectWithTag("Main Game").transform;
-            createdObject.gameObject.SetActive(true);
-            DataMiner.abilityCount[2]++;
+            ExecuteAbility(powerUps[2], abilityImage3, isCoolDown3, dragonPosition);
         }
-
 
         if (isCoolDown3 == true)
         {
-            abilityImage3.fillAmount -= 1 / coolDown1 * Time.deltaTime;
+            if( !(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
+            CoolDown(abilityImage3, coolDown3, ref isCoolDown3, ref pressed3);
+        }
+    }
 
-            if (abilityImage3.fillAmount <= 0)
-            {
-                abilityImage3.fillAmount = 0;
-                isCoolDown3 = false;
-                pressed3 = false;
+    private void ExecuteAbility(GameObject powerUp,Image abilityImage, bool isCoolDown, Vector3 spawnPosition)
+    {
+        abilityImage.fillAmount = 1;
 
-            }
+        createdObject = Instantiate(powerUp, spawnPosition, Quaternion.identity);
+        createdObject.transform.parent = GameObject.FindGameObjectWithTag("Main Game").transform;
+        createdObject.gameObject.SetActive(true);
+    }
+
+    private void CoolDown(Image abilityImage, float coolDown, ref bool isCoolDown, ref bool pressed)
+    {
+        abilityImage.fillAmount -= 1 / coolDown * Time.deltaTime;
+
+        if(abilityImage.fillAmount<=0)
+        {
+            abilityImage.fillAmount = 0;
+            isCoolDown = false;
+            pressed = false;
         }
     }
 
     public void Pressed(string objName)
     {
+        if (!(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
+        {
             switch (objName)
             {
                 case "Messenger":
                     pressed1 = true;
-                    break;
+                    if (isCoolDown1 == false)
+                        DataMiner.abilityandEventCount[0]++;
+
+                   
+                        break;
                 case "Penguin":
                     pressed2 = true;
                     CraftingManager.helperName = "Penguin";
+                    if (isCoolDown2 == false)
+                        DataMiner.abilityandEventCount[1]++;
+                    if (gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure && (DataMiner.abilityandEventCount[1] <= 2&&DataMiner.abilityandEventCount[1]>0))
+                    {
+                        if (DataMiner.abilityandEventCount[1] <= 1)
+                            firstTimeClicked = true;
+                        else
+                            secondTimeClicked = true;
+
+                    }
                     break;
                 case "Dragon":
-                        pressed3 = true;
+                    pressed3 = true;
+                    if (isCoolDown3 == false)
+                        DataMiner.abilityandEventCount[2]++;
                     break;
                 default:
                     break;
             }
-        
-       
+
+
+
+          
+
+
+
+
+
+        }
+
+        TimeManager.ResetAFKTimer();
 
     }
 }

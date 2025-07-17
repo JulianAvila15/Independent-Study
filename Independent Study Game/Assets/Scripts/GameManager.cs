@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public OrderManager orderManager;
     public CraftingManager craftingManager;
     public TimeManager timeManager;
+    public TutorialManager tutorialManager;
     public Image pausePanel;
     public Button pauseButton,continueButton;
     public Canvas mainCanvas,workIDCanvas,bgCanvas;
@@ -15,7 +16,8 @@ public class GameManager : MonoBehaviour
     string workerID;
     public GameObject errorMessagePanel;
     public DataMiner dataMiner;
-
+    public bool isPausedByFocusLoss = false;
+    [SerializeField] public bool inTestingMode;
 
     public static bool gameOver = false;
     public enum ProgressFeedbackType
@@ -95,24 +97,42 @@ public class GameManager : MonoBehaviour
         {
             EnterWorkID();
         }
+
+        if(pausePanel.gameObject.activeInHierarchy||orderManager.newLevelProgressed.activeInHierarchy||tutorialManager.tutorialPanel.activeInHierarchy||tutorialManager.tutorialPowerUp.activeInHierarchy)
+        {
+            pauseButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            pauseButton.gameObject.SetActive(true);
+        }
     }
 
     public void Pause()//Pauses game
     {
-        if (pausePanel.IsActive())
-        {
-            pausePanel.gameObject.SetActive(false);
-            pauseButton.gameObject.SetActive(true);
-        }
-        else
+      if(!(orderManager.newLevelProgressed.activeInHierarchy || tutorialManager.tutorialPanel.activeInHierarchy || tutorialManager.tutorialPowerUp.activeInHierarchy ||workIDCanvas.gameObject.activeInHierarchy) && (ProgressiveDisclosureHandler.introPDTutorialFinished || (tutorialType!=TutorialType.progressiveDisclosure)))
         {
             pausePanel.gameObject.SetActive(true);
-            pauseButton.gameObject.SetActive(false);
 
+        }
+        else if(isPausedByFocusLoss)//can only pause with the conditions above so even if focus is lost, game will not pause
+        {
+            isPausedByFocusLoss = false;
         }
 
         
 
+    }
+
+    public void Continue()
+    {
+        if (pausePanel.IsActive())
+        {
+            pausePanel.gameObject.SetActive(false);
+        }
+
+        isPausedByFocusLoss = false;
+        
     }
 
     public void OnEdit()
@@ -129,7 +149,6 @@ public class GameManager : MonoBehaviour
         {
             workerID = inputText.GetComponent<Text>().text;
             DataMiner.workerID = workerID;
-            Debug.Log(workerID);
             StartorStopGame(true);
         }
     }
@@ -155,4 +174,17 @@ public class GameManager : MonoBehaviour
         errorMessagePanel.SetActive(false);
     }
 
-}
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        // If the application has lost focus and we haven't already paused it,
+        // then call the Pause function.
+        if (!hasFocus && !isPausedByFocusLoss&&!inTestingMode)
+        {
+
+            // Set our flag to true so we know the pause was triggered by focus loss.
+            isPausedByFocusLoss = true;
+            Pause();
+        }
+    }
+
+    }

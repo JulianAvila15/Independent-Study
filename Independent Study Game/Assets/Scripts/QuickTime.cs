@@ -68,7 +68,6 @@ public class QuickTime : MonoBehaviour
 
         if (slider.value > .51 && slider.value < .60)
         {
-            Debug.Log("Correct timing!");
             goodRangeMet = true;
             goodText.gameObject.SetActive(true);
            
@@ -96,7 +95,6 @@ public class QuickTime : MonoBehaviour
                 badText1.gameObject.SetActive(true);
             }
 
-            Debug.Log("Incorrect timing!");
             goodRangeMet = false;
         }
         TimeManager.ResetAFKTimer();

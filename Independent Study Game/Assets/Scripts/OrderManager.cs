@@ -18,8 +18,6 @@ public class OrderManager : MonoBehaviour
 
     public int[] ordersToCompletePerLevel;
 
-    public TextMeshProUGUI basicFeedback;
-
     public Slider progressBar;
 
     public GameObject newLevelProgressed,ingredientsUnlockedAlert;
@@ -30,6 +28,10 @@ public class OrderManager : MonoBehaviour
 
     public GameObject penguinButton, messengerButton, dragonButton, timingButton, collectingButton;
 
+    public Image[] feedBackImages;
+
+    public GameObject mainGame;
+
     
 
     // Start is called before the first frame update
@@ -38,29 +40,31 @@ public class OrderManager : MonoBehaviour
         numOfIngredientsAvailable = 5;
         numOfOrdersInLevel = ordersToCompletePerLevel[currLevel];
         CreateNewOrder();
-        basicFeedback.gameObject.SetActive(false);
         FindTotalNumOfOrders();
         progressBar.minValue = 0;
-        progressBar.maxValue = totalNumofOrders;
+        progressBar.maxValue = ordersToCompletePerLevel[currLevel];
     }
 
     IEnumerator BasicFeedback()
     {
-        basicFeedback.gameObject.SetActive(true);
+       
         if (CheckLists(listOfOrder, craftingMan.finalOrderList))//checks to see if the list of items in current order is equal to the final crafted order
         {
-
-            basicFeedback.GetComponent<TextMeshProUGUI>().text = "^_^";
-            basicFeedback.GetComponent<TextMeshProUGUI>().color = new Color(0, 255, 0);
+            feedBackImages[0].gameObject.SetActive(true);
         }
         else
         {
 
-            basicFeedback.GetComponent<TextMeshProUGUI>().text = "  X";
-            basicFeedback.GetComponent<TextMeshProUGUI>().color = new Color(255, 0, 0);
+            feedBackImages[1].gameObject.SetActive(true);
         }
+
         yield return new WaitForSeconds(1.0f);
-        basicFeedback.gameObject.SetActive(false);
+
+        if(feedBackImages[0].gameObject.activeInHierarchy)
+            feedBackImages[0].gameObject.SetActive(false);
+        else
+
+            feedBackImages[1].gameObject.SetActive(false);
     }
 
     IEnumerator NewLevelFeedback()
@@ -75,6 +79,9 @@ public class OrderManager : MonoBehaviour
         
             TimeManager.ResetAFKTimer();
         newLevelProgressed.SetActive(false);
+
+        if (gameManager.isPausedByFocusLoss)
+            gameManager.Pause();
         GenerateNewLevel();
     }
 
@@ -143,7 +150,6 @@ public class OrderManager : MonoBehaviour
             //Add some basic feedback to let the player know that they have successfully completed the order
             StartCoroutine(BasicFeedback());
 
-            Debug.Log("Correct Order");
             DataMiner.numOfSuccessfulCrafts++;
 
 
@@ -162,7 +168,6 @@ public class OrderManager : MonoBehaviour
 
             if (currentOrderIndex >= numOfOrdersInLevel)
             {
-                Debug.Log("Level has been beaten");
                 StartCoroutine(NewLevelFeedback());
                 currentOrderIndex = 0;
             }
@@ -171,10 +176,10 @@ public class OrderManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Incorrect Order");
             ClearOrder();
             StartCoroutine(BasicFeedback());
-            DataMiner.numOfFailedCrafts++;
+
+                DataMiner.numOfFailedCrafts++;
         }
 
 
@@ -203,8 +208,13 @@ public class OrderManager : MonoBehaviour
             itemSprite4.sprite = listOfOrder[3].GetComponent<Image>().sprite;
         }
 
-
+        if (newLevelProgressed.activeInHierarchy)
+            gameManager.pauseButton.gameObject.SetActive(false);
+        else
+            gameManager.pauseButton.gameObject.SetActive(true);
     }
+
+
 
 }
 

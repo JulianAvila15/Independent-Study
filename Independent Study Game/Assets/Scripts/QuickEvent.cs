@@ -17,19 +17,21 @@ public class QuickEvent : MonoBehaviour
     public CraftingManager craftingMan;
     public GameManager gameManager;
 
-    [Header("quickEvent1")]
-    public float coolDown1;
-    bool isCoolDown1 = false;
-    public KeyCode quickEvent1;
-    bool pressed1 = false;
+    [Header("quickEventTiming")]
+    public float coolDownTiming;
+    bool isCoolDownTiming = false;
+    public KeyCode quickEventTiming;
+    bool pressedTiming = false;
 
-    [Header("quickEvent2")]
-    public float coolDown2;
-    bool isCoolDown2 = false;
-    public KeyCode quickEvent2;
-    bool pressed2 = false;
+    [Header("quickEventCollecting")]
+    public float coolDownCollecting;
+    bool isCoolDownCollecting = false;
+    public KeyCode quickEventCollecting;
+    bool pressedCollecting = false;
 
     public DataMiner miner;
+
+   public GameObject newLevelAlert,powerUpTutorialPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -40,65 +42,71 @@ public class QuickEvent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        QuickEvent1();
-        QuickEvent2();
+        QuickEventTiming();
+        QuickEventCollecting();
     }
 
-    private void QuickEvent1()
+    private void QuickEventTiming()
     {
-        if ((Input.GetKey(quickEvent1) || pressed1) && isCoolDown1 == false)
+        if ((Input.GetKey(quickEventTiming) || pressedTiming) && isCoolDownTiming == false)
         {
-            isCoolDown1 = true;
+            isCoolDownTiming = true;
             quickEventImage1.fillAmount = 1;
             timing.SetActive(true);
-            DataMiner.quickTimeCount[0]++;
+           
         }
 
 
-        if (isCoolDown1 == true)
+        if (isCoolDownTiming == true)
         {
-            quickEventImage1.fillAmount -= 1 / coolDown1 * Time.deltaTime;
+            quickEventImage1.fillAmount -= 1 / coolDownTiming * Time.deltaTime;
 
             if (quickEventImage1.fillAmount <= 0)
             {
                 quickEventImage1.fillAmount = 0;
-                isCoolDown1 = false;
-                pressed1 = false;
+                isCoolDownTiming = false;
+                pressedTiming = false;
             }
         }
     }
 
     public void TimingGameEnabled()
     {
-            pressed1 = true;
+            pressedTiming = true;
+        if(!isCoolDownTiming)
+        DataMiner.abilityandEventCount[3]++;
     }
 
-    private void QuickEvent2()
+    private void QuickEventCollecting()
     {
-        if ((Input.GetKey(quickEvent2) || pressed2) && isCoolDown2 == false)
+        if ((Input.GetKey(quickEventCollecting) || pressedCollecting) && isCoolDownCollecting == false)
         {
-            isCoolDown2 = true;
+            isCoolDownCollecting = true;
             quickEventImage2.fillAmount = 1;
             collectingGame.SetActive(true);
-            DataMiner.abilityCount[1]++;
         }
 
 
-        if (isCoolDown2 == true)
+        if (isCoolDownCollecting == true)
         {
-            quickEventImage2.fillAmount -= 1 / coolDown1 * Time.deltaTime;
+            quickEventImage2.fillAmount -= 1 / coolDownCollecting * Time.deltaTime;
 
             if (quickEventImage2.fillAmount <= 0)
             {
                 quickEventImage2.fillAmount = 0;
-                isCoolDown2 = false;
-                pressed2 = false;
+                isCoolDownCollecting = false;
+                pressedCollecting = false;
             }
         }
     }
 
     public void CollectingGameEnabled()
     {
-            pressed2 = true;
+        if (!(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
+        {
+            pressedCollecting = true;
+            if (!isCoolDownCollecting)
+                DataMiner.abilityandEventCount[4]++;
+        }
     }
 }

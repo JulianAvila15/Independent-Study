@@ -10,7 +10,7 @@ public class CollectingGameManager : MonoBehaviour
     public CraftingManager craftingManager;
     public Slider progressBar;
     int slotIndex;
-    
+    int firstSlot = 0, secondSlot = 1;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,15 +30,14 @@ public class CollectingGameManager : MonoBehaviour
 
             if (coinsCollected >= 10) //Max Score
             {
-                for (int i = 0; i < 2; i++)
-                {
-                    slotIndex = i;
-                    craftingManager.CreateSlot(slotIndex);
-                }
+                    
+                    craftingManager.CreateSlot(firstSlot);
+                craftingManager.CreateSlot(secondSlot);
+                
             }
             else if (coinsCollected >= 5) //Benchmark Score
             {
-                slotIndex = 0;
+                slotIndex = (craftingManager.finalOrderList[firstSlot] == null || craftingManager.finalOrderList[firstSlot]!=craftingManager.orderManager.listOfOrder[0]) ? firstSlot : secondSlot;
                 craftingManager.CreateSlot(slotIndex);
             }
             coinsCollected = coinsProduced = 0;
@@ -47,7 +46,7 @@ public class CollectingGameManager : MonoBehaviour
 
     private void OnDisable()
     {
-      
+
     }
 
     private void OnEnable()

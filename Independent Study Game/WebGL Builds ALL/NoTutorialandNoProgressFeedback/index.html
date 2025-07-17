@@ -1,76 +1,112 @@
-<!--
-unity webgl responsive
-
-template by dom
-dom@crowscrowscrows.com
-https://twitter.com/zerstoerer
-
-source code on github
-https://github.com/sno/unity-webgl-responsive
--->
-
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="assets/css/reset.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Independent Study Game</title>
+	<style>
+		html,
+		body {
+			background: #000;
+			width: 100%;
+			height: 100%;
+			overflow: visible;
+			padding: 0;
+			margin: 0;
+		}
 
-    <title>Independent Study Game</title>
-  </head>
-  <body>
-    <div class="webgl-wrapper">
-      <div class="aspect"></div>
-      <div class="webgl-content">
-        <div id="unityContainer">
-          <canvas id="unity-canvas" style="background: #231F20"></canvas>
-        </div>
-      </div>
-    </div>
+		div#gameContainer {
+			background: transparent !important;
+			position: absolute;
+		}
 
-    <div class="info">
-      <p>unity webgl responsive</p>
-      <p>press F or <a href="#" onclick="myGameInstance.SetFullscreen(1)">click here</a> to toggle fullscreen</p>
-    </div>
+		div#gameContainer canvas {
+			position: absolute;
+		}
 
-    <!-- feel free to remove all credits! -->
-    <div class="info">
-      <p>source code on <a href="https://github.com/sno/unity-webgl-responsive">github</a></p>
-      <p>template by dom / <a href="https://twitter.com/zerstoerer">@zerstoerer</a></p>
-    </div>
+		div#gameContainer canvas[data-pixel-art="true"] {
+			position: absolute;
+			image-rendering: optimizeSpeed;
+			image-rendering: -webkit-crisp-edges;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -o-crisp-edges;
+			image-rendering: crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: optimize-contrast;
+			image-rendering: pixelated;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+	</style>
+</head>
 
-    <script src="MyLoader.js"></script>
-    <script>
-      createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/NoTutorialandNoProgressFeedback.data.br",
-        frameworkUrl: "Build/NoTutorialandNoProgressFeedback.framework.js.br",
-        codeUrl: "Build/NoTutorialandNoProgressFeedback.wasm.br",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "Independent Study Game",
-        productVersion: "1.0",
-      }).then((unityInstance) => {
-        myGameInstance = unityInstance;
-      });
-    </script>
+<body>
+	<div id="gameContainer">
+		<canvas id="unity-canvas" data-pixel-art="true"></canvas>
+		<script src="Build/NoTutorialandNoProgressFeedback.loader.js"></script>
+		<script>
+			var canvas = document.querySelector("#unity-canvas");
+			var config = {
+				dataUrl: "Build/NoTutorialandNoProgressFeedback.data",
+				frameworkUrl: "Build/NoTutorialandNoProgressFeedback.framework.js",
+				codeUrl: "Build/NoTutorialandNoProgressFeedback.wasm",
+				streamingAssetsUrl: "StreamingAssets",
+				companyName: "DefaultCompany",
+				productName: "Independent Study Game",
+				productVersion: "1.0",
+			};
+			var scaleToFit;
+			try {
+				scaleToFit = !!JSON.parse("true");
+			} catch (e) {
+				scaleToFit = true;
+			}
+			function progressHandler(progress) {
+				var percent = progress * 100 + '%';
+				canvas.style.background = 'linear-gradient(to right, white, white ' + percent + ', transparent ' + percent + ', transparent) no-repeat center';
+				canvas.style.backgroundSize = '100% 1rem';
+			}
+			function onResize() {
+				var container = canvas.parentElement;
+				var w;
+				var h;
 
-    <!-- check for F key press to toggle full screen -->
-    <script>
-      var isFullscreen = false;
+				if (scaleToFit) {
+					w = window.innerWidth;
+					h = window.innerHeight;
 
-      document.addEventListener('keydown', function(event) {
-          if (event.which === 70) {
-              if (!isFullscreen) {
-                myGameInstance.SetFullscreen(1);
-              } else {
-                myGameInstance.SetFullscreen(0);
-              }
-              isFullscreen = !isFullscreen;
-          }
-      });
-    </script>
-  </body>
+					var r = 1080 / 1920;
+
+					if (w * r > window.innerHeight) {
+						w = Math.min(w, Math.ceil(h / r));
+					}
+					h = Math.floor(w * r);
+				} else {
+					w = 1920;
+					h = 1080;
+				}
+
+				container.style.width = canvas.style.width = w + "px";
+				container.style.height = canvas.style.height = h + "px";
+				container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+				container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+			}
+			createUnityInstance(canvas, config, progressHandler).then(function (instance) {
+				canvas = instance.Module.canvas;
+				onResize();
+			});
+			window.addEventListener('resize', onResize);
+			onResize();
+
+			if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+				// Mobile device style: fill the whole browser client area with the game canvas:
+				const meta = document.createElement('meta');
+				meta.name = 'viewport';
+				meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+				document.getElementsByTagName('head')[0].appendChild(meta);
+			}
+		</script>
+	</div>
+</body>
+
 </html>

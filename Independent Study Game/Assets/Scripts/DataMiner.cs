@@ -24,11 +24,11 @@ public class DataMiner : MonoBehaviour
     bool dataHasBeenSent = false;
     private static int questCompleted;
 
-    public static int[] abilityCount = { 0, 0, 0 };//Keep track of ability/summon count
-    public static int[] quickTimeCount = { 0, 0, 0 };//Keep track of mini game count
+    public static int[] abilityandEventCount = { 0, 0, 0, 0, 0 };//Keep track of ability/summon/Event count
     public static string progressFeedbackMode, tutorialMode;//Keep track of game modes
     public static int numOfIngredientClicks=0,numOfCrafts=0,numOfSuccessfulCrafts=0,numOfFailedCrafts=0,currLevel=0;//game variables
-    public static string totalTime="-1";//Keep track of timing
+    public static string totalTime="-1", tutorialTimeIntro="00 minutes:00 seconds";//Keep track of timing
+    public static string[] powerUpTutorialTime = { "00 minutes:00 seconds", "00 minutes:00 seconds", "00 minutes:00 seconds", "00 minutes:00 seconds", "00 minutes:00 seconds" };
     public static string[] timeSpentOnEachLevel = { "-1", "-1", "-1", "-1", "-1" , "-1" , "-1" , "-1" , "-1" , "-1" };
 
     GameManager gameManager;
@@ -64,6 +64,9 @@ public class DataMiner : MonoBehaviour
         
     }
 
+    public void Update()
+    {
+    }
 
     public void logdata()
     {
@@ -73,12 +76,33 @@ public class DataMiner : MonoBehaviour
         {
             dataHasBeenSent = true;
             logString += workerID + "," + DateTime.Now + "," + progressFeedbackMode + ","
-                + tutorialMode + "," + numOfIngredientClicks + ","+numOfCrafts+","+ numOfSuccessfulCrafts+","+numOfFailedCrafts+","+currLevel;
+                + tutorialMode + "," +  tutorialTimeIntro +"," + numOfIngredientClicks + ","+numOfCrafts+","+ numOfSuccessfulCrafts+","+numOfFailedCrafts+","+currLevel;
 
-            for (int i = 0; i < abilityCount.Length; i++)
-                logString += ", " + abilityCount[i];
-            for (int i = 0; i < quickTimeCount.Length; i++)
-                logString += ", " + quickTimeCount[i];
+            for (int i = 0; i < abilityandEventCount.Length; i++)
+            {
+                logString += ", " + abilityandEventCount[i];
+
+                switch(i)
+                {
+                    case 0: //messenger
+                        logString += ", " + powerUpTutorialTime[2];
+                        break;
+                    case 1: //penguin
+                        logString += ", " + powerUpTutorialTime[0];
+                        break;
+                    case 2: //dragon
+                        logString += ", " + powerUpTutorialTime[3];
+                        break;
+                    case 3: //timing
+                        logString += ", " + powerUpTutorialTime[4];
+                        break;
+                        case 4: //coin
+                        logString += ", " + powerUpTutorialTime[1];
+                        break;
+                }
+
+
+            }
             for (int i = 0; i < timeSpentOnEachLevel.Length; i++)
                 logString += ", " + timeSpentOnEachLevel[i];
 
