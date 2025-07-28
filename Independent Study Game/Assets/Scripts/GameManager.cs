@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 public class GameManager : MonoBehaviour
 {
+
+   public static bool pause = false;
     public OrderManager orderManager;
     public CraftingManager craftingManager;
     public TimeManager timeManager;
@@ -110,7 +112,7 @@ public class GameManager : MonoBehaviour
 
     public void Pause()//Pauses game
     {
-      if(!(orderManager.newLevelProgressed.activeInHierarchy || tutorialManager.tutorialPanel.activeInHierarchy || tutorialManager.tutorialPowerUp.activeInHierarchy ||workIDCanvas.gameObject.activeInHierarchy) && (ProgressiveDisclosureHandler.introPDTutorialFinished || (tutorialType!=TutorialType.progressiveDisclosure)))
+      if(!(orderManager.newLevelProgressed.activeInHierarchy || workIDCanvas.gameObject.activeInHierarchy||timeManager.endGameScreen.activeInHierarchy))
         {
             pausePanel.gameObject.SetActive(true);
 
@@ -120,8 +122,12 @@ public class GameManager : MonoBehaviour
             isPausedByFocusLoss = false;
         }
 
-        
+        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered&&tutorialManager.abilityPDHandler.pdTutorialPanelAbility.activeInHierarchy)
+            tutorialManager.abilityPDHandler.pdTutorialPanelAbility.SetActive(false);
 
+        pause = true;
+
+        Time.timeScale = 0f;//pause coroutines
     }
 
     public void Continue()
@@ -132,7 +138,14 @@ public class GameManager : MonoBehaviour
         }
 
         isPausedByFocusLoss = false;
-        
+
+        pause = false;
+
+        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered&&!tutorialManager.abilityPDHandler.pdTutorialPanelAbility.activeInHierarchy)
+            tutorialManager.abilityPDHandler.pdTutorialPanelAbility.SetActive(true);
+
+        Time.timeScale = 1f;//continue coroutines
+
     }
 
     public void OnEdit()
@@ -178,7 +191,7 @@ public class GameManager : MonoBehaviour
     {
         // If the application has lost focus and we haven't already paused it,
         // then call the Pause function.
-        if (!hasFocus && !isPausedByFocusLoss&&!inTestingMode)
+        if (!hasFocus && !isPausedByFocusLoss&&!inTestingMode&&!QuickTime.quickTimeEnabled&&!orderManager.newLevelProgressed.activeInHierarchy)
         {
 
             // Set our flag to true so we know the pause was triggered by focus loss.

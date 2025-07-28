@@ -15,6 +15,7 @@ TagManager:
   - Main Game
   - FxTemporaire
   - WorkCanvas
+  - Spawner
   layers:
   - Default
   - TransparentFX

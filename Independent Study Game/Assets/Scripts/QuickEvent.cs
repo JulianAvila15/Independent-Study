@@ -33,6 +33,8 @@ public class QuickEvent : MonoBehaviour
 
    public GameObject newLevelAlert,powerUpTutorialPanel;
 
+    [SerializeField] private AbilityTutorialProgressiveDisclosureHandler abilityPDTutorialManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,19 +55,24 @@ public class QuickEvent : MonoBehaviour
             isCoolDownTiming = true;
             quickEventImage1.fillAmount = 1;
             timing.SetActive(true);
-           
+
+            if (abilityPDTutorialManager != null && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+                abilityPDTutorialManager.OnAbilityButtonClicked();
+
         }
 
-
-        if (isCoolDownTiming == true)
+        if (!GameManager.pause&&(gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || abilityPDTutorialManager.completedTutorials.Contains("Timing") && abilityPDTutorialManager.completedTutorials.Count > 0 || abilityPDTutorialManager.CheckIfCoolDownEnabled()))
         {
-            quickEventImage1.fillAmount -= 1 / coolDownTiming * Time.deltaTime;
-
-            if (quickEventImage1.fillAmount <= 0)
+            if (isCoolDownTiming == true)
             {
-                quickEventImage1.fillAmount = 0;
-                isCoolDownTiming = false;
-                pressedTiming = false;
+                quickEventImage1.fillAmount -= 1 / coolDownTiming * Time.deltaTime;
+
+                if (quickEventImage1.fillAmount <= 0)
+                {
+                    quickEventImage1.fillAmount = 0;
+                    isCoolDownTiming = false;
+                    pressedTiming = false;
+                }
             }
         }
     }
@@ -84,18 +91,24 @@ public class QuickEvent : MonoBehaviour
             isCoolDownCollecting = true;
             quickEventImage2.fillAmount = 1;
             collectingGame.SetActive(true);
+
+            if (abilityPDTutorialManager != null && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+                abilityPDTutorialManager.OnAbilityButtonClicked();
         }
 
-
-        if (isCoolDownCollecting == true)
+        if (!GameManager.pause&&(gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || ((abilityPDTutorialManager.completedTutorials.Contains("Collecting") && abilityPDTutorialManager.completedTutorials.Count > 0) || abilityPDTutorialManager.CheckIfCoolDownEnabled())))
         {
-            quickEventImage2.fillAmount -= 1 / coolDownCollecting * Time.deltaTime;
 
-            if (quickEventImage2.fillAmount <= 0)
+            if (isCoolDownCollecting == true)
             {
-                quickEventImage2.fillAmount = 0;
-                isCoolDownCollecting = false;
-                pressedCollecting = false;
+                quickEventImage2.fillAmount -= 1 / coolDownCollecting * Time.deltaTime;
+
+                if (quickEventImage2.fillAmount <= 0)
+                {
+                    quickEventImage2.fillAmount = 0;
+                    isCoolDownCollecting = false;
+                    pressedCollecting = false;
+                }
             }
         }
     }

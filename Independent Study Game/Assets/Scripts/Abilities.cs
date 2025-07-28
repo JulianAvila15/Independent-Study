@@ -10,7 +10,7 @@ public class Abilities : MonoBehaviour
 
     public CraftingManager craftingMan;
     public GameManager gameManager;
-    public ProgressiveDisclosureHandler pdHandler;
+     [SerializeField] private IntroProgressiveDisclosureHandler pdHandler;
     public Image abilityImage1;
     public Image abilityImage2;
     public Image abilityImage3;
@@ -41,7 +41,10 @@ public class Abilities : MonoBehaviour
     Vector3 spawnPosition,dragonPosition;
 
     bool firstTimeClicked=false, secondTimeClicked=false;
-   
+
+    [SerializeField] private GameObject mainGame;
+
+    [SerializeField] private AbilityTutorialProgressiveDisclosureHandler abilityPDTutorialManager;
 
     private void Awake()
     {
@@ -56,11 +59,12 @@ public class Abilities : MonoBehaviour
     {
         abilityImage1.fillAmount = abilityImage2.fillAmount = abilityImage3.fillAmount = 0;
 
-        
         spawnPosition =new Vector3(-12.13f, -2.4f, 0);
         
         dragonPosition = new Vector3(12.13f, -2f, 0);
-        
+
+
+
     }
 
     // Update is called once per frame
@@ -68,96 +72,65 @@ public class Abilities : MonoBehaviour
     {
 
 
-            //messenger
-            TriggerAbility1();
-            //penguin
-            TriggerAbility2();
-            //dragon
-            TriggerAbility3();   
+        //messenger
+        if(pressed1)
+        TriggerAbility(ref pressed1, ref isCoolDown1,"Messenger", ability1,0,spawnPosition,ref abilityImage1,coolDown1);
+        //penguin
+        if (pressed2) 
+            TriggerAbility(ref pressed2, ref isCoolDown2, "Penguin", ability2, 1, spawnPosition, ref abilityImage2, coolDown2);
+        
+        //dragon
+        if(pressed3)
+        TriggerAbility(ref pressed3, ref isCoolDown3, "Dragon", ability3, 2, dragonPosition, ref abilityImage3, coolDown3);
     }
 
-
-    void TriggerAbility1()
+    void TriggerAbility(ref bool pressed, ref bool isCoolDown, string abilityName, KeyCode abilityKeyCode, int powerUpIndex, Vector3 spawnPosition, ref Image abilityImage,float coolDown)
     {
-        
-        
-            if ((Input.GetKey(ability1) || pressed1) && isCoolDown1 == false)
-            {
-            isCoolDown1 = true;
-            ExecuteAbility(powerUps[0], abilityImage1, isCoolDown1, spawnPosition);
-
-             }
-
-
-            if (isCoolDown1 == true)
-            {
-            if (!(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
-                CoolDown(abilityImage1, coolDown1, ref isCoolDown1, ref pressed1);
-            }
-        
-    }
-
-    void TriggerAbility2()
-    {
-        if ((Input.GetKey(ability2) || pressed2) && isCoolDown2 == false)
+        if (pressed && isCoolDown == false)
         {
-            isCoolDown2 = true;
-            ExecuteAbility(powerUps[1], abilityImage2, isCoolDown2, spawnPosition);
+            isCoolDown = true;
+            ExecuteAbility(powerUps[powerUpIndex], abilityImage, isCoolDown, spawnPosition);
 
-            if (firstTimeClicked)
-            {
-                Debug.Log("summon set");
-                Helper setHelper = createdObject.GetComponent<Helper>();
-                pdHandler.SetSummon(ref setHelper);
-                pdHandler.AdvanceAbilityStep();
-                Debug.Log("clicked for the first time");
-            }
+            if (!Helper.penguinHasShownIngredient&&CraftingManager.helperName == "Penguin")
+                craftingMan.penguinItemSuccessfullyDropped = false;
+
+            if (abilityPDTutorialManager!=null&&AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+                abilityPDTutorialManager.OnAbilityButtonClicked();
 
         }
 
-        if (pdHandler.completedTutorials.Contains("Penguin"))
+        if (gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || abilityPDTutorialManager.completedTutorials.Contains(abilityName)&&abilityPDTutorialManager.completedTutorials.Count>0 || abilityPDTutorialManager.CheckIfCoolDownEnabled())
         {
-            if (isCoolDown2 == true)
+            if (isCoolDown == true)
             {
                 if (!(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
-                    CoolDown(abilityImage2, coolDown2, ref isCoolDown2, ref pressed2);
+                    CoolDown(abilityImage, coolDown, ref isCoolDown, ref pressed);
             }
         }
-    }
 
-    private void TriggerAbility3()
-    {
-        if ((Input.GetKey(ability3) || pressed3) && isCoolDown3 == false)
-        {
-            isCoolDown3 = true;
-            ExecuteAbility(powerUps[2], abilityImage3, isCoolDown3, dragonPosition);
-        }
-
-        if (isCoolDown3 == true)
-        {
-            if( !(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
-            CoolDown(abilityImage3, coolDown3, ref isCoolDown3, ref pressed3);
-        }
     }
 
     private void ExecuteAbility(GameObject powerUp,Image abilityImage, bool isCoolDown, Vector3 spawnPosition)
     {
         abilityImage.fillAmount = 1;
-
         createdObject = Instantiate(powerUp, spawnPosition, Quaternion.identity);
-        createdObject.transform.parent = GameObject.FindGameObjectWithTag("Main Game").transform;
+        createdObject.transform.parent = mainGame.transform;
         createdObject.gameObject.SetActive(true);
     }
 
     private void CoolDown(Image abilityImage, float coolDown, ref bool isCoolDown, ref bool pressed)
     {
-        abilityImage.fillAmount -= 1 / coolDown * Time.deltaTime;
 
-        if(abilityImage.fillAmount<=0)
+        if (!GameManager.pause)
         {
-            abilityImage.fillAmount = 0;
-            isCoolDown = false;
-            pressed = false;
+            abilityImage.fillAmount -= 1 / coolDown * Time.deltaTime;
+
+            if (abilityImage.fillAmount <= 0)
+            {
+                abilityImage.fillAmount = 0;
+                isCoolDown = false;
+                pressed = false;
+            }
         }
     }
 
@@ -165,33 +138,33 @@ public class Abilities : MonoBehaviour
     {
         if (!(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
         {
+
             switch (objName)
             {
                 case "Messenger":
-                    pressed1 = true;
-                    if (isCoolDown1 == false)
-                        DataMiner.abilityandEventCount[0]++;
-
-                   
-                        break;
-                case "Penguin":
-                    pressed2 = true;
-                    CraftingManager.helperName = "Penguin";
-                    if (isCoolDown2 == false)
-                        DataMiner.abilityandEventCount[1]++;
-                    if (gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure && (DataMiner.abilityandEventCount[1] <= 2&&DataMiner.abilityandEventCount[1]>0))
+                    if (gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || (abilityPDTutorialManager.currentAbilityTutorialData != null && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && abilityPDTutorialManager.currentAbilityTutorialData.abilityName == "Messenger"))
                     {
-                        if (DataMiner.abilityandEventCount[1] <= 1)
-                            firstTimeClicked = true;
-                        else
-                            secondTimeClicked = true;
-
+                        pressed1 = true;
+                        if (isCoolDown1 == false)
+                            DataMiner.abilityandEventCount[0]++;
+                    }
+                    break;
+                case "Penguin":
+                    if (gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && abilityPDTutorialManager.currentAbilityTutorialData.abilityName == "Penguin")
+                    {
+                        pressed2 = true;
+                        CraftingManager.helperName = "Penguin";
+                        if (isCoolDown2 == false)
+                            DataMiner.abilityandEventCount[1]++;
                     }
                     break;
                 case "Dragon":
-                    pressed3 = true;
-                    if (isCoolDown3 == false)
-                        DataMiner.abilityandEventCount[2]++;
+                    if (gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && abilityPDTutorialManager.currentAbilityTutorialData.abilityName == "Dragon")
+                    {
+                        pressed3 = true;
+                        if (isCoolDown3 == false)
+                            DataMiner.abilityandEventCount[2]++;
+                    }
                     break;
                 default:
                     break;

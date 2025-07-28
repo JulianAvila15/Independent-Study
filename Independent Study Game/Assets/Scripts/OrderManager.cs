@@ -28,6 +28,8 @@ public class OrderManager : MonoBehaviour
 
     public GameObject penguinButton, messengerButton, dragonButton, timingButton, collectingButton;
 
+    public bool penguinUnlocked=false;
+
     public Image[] feedBackImages;
 
     public GameObject mainGame;
@@ -109,20 +111,33 @@ public class OrderManager : MonoBehaviour
             }
 
 
-
             //set current num of items to the current level
             numOfOrdersInLevel = ordersToCompletePerLevel[currLevel];
 
-            if (currLevel == 2)
-                penguinButton.SetActive(true);
-            if (currLevel == 4)
-                collectingButton.SetActive(true);
-            if (currLevel == 6)
-                messengerButton.SetActive(true);
-            if (currLevel == 8)
-                dragonButton.SetActive(true);
-            if (currLevel == 10)
-                timingButton.SetActive(true);
+            switch (currLevel)
+            {
+                case 2:
+                    penguinButton.SetActive(true);
+                    penguinUnlocked=true;
+                    break;
+                case 4:
+                    collectingButton.SetActive(true);
+                    break;
+                case 6:
+                    messengerButton.SetActive(true);
+                    break;
+                case 8:
+                    dragonButton.SetActive(true);
+                    break;
+                case 10:
+                    timingButton.SetActive(true);
+                    break;
+                default:
+                    break;
+                
+            }
+               
+
         }
     }
 

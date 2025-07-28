@@ -12,18 +12,24 @@ public enum TutorialStepType
     SummonedAppeared,
     IngredientDropped,
     ReplaceIngredient,
+    ResetSummon,
+    WatchSummon,
 
  
     ShowImage,
 
     //collecting mini game
+    miniGameStart,
     waitForWalkRight,
     waitForWalkLeft,
     waitForJump,
-    waitForSpawnCoin,
+    spawnCoin,
+    demonstrateCollecting,
+    demonstrateLosing,
+    endingCollectingGame,
 
     //timing mini game
-    waitForStopOnGreen
+    waitForStopOnGreen,
 
 }
 
@@ -35,6 +41,7 @@ public class AbilityTutorialData : MonoBehaviour
     public Helper summon;
     public Color buttonColor,selectedSlotColor;
     public int slotIndex;   // Used for HighlightSlot
+    public bool buttonCLickedFirstTime;
 }
 
 [System.Serializable]
@@ -52,6 +59,17 @@ public class AbilityTutorialStepData
     public bool clicked=false;
 
     public bool summonCanContinue;
+    public bool needSummon;
+
+    public bool canClickThroughPanel=false;
+    public bool turnOnCoolDown = false;
+    public bool playerCanMove,playerCanJump,canStartSpawningCoin,coinCanStartMoving, coinMoveSlowly;
+
+    public int coinsToSpawnBeforeNextStep;
+
+    public bool showStopButton;
+
+
 
 }
 

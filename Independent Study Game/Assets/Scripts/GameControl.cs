@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameControl : MonoBehaviour
 {
     public GameObject mainGame;
+    public GameObject triggerWarp;
     // Start is called before the first frame update
     void Awake()
     {
@@ -20,6 +21,10 @@ public class GameControl : MonoBehaviour
     private void OnEnable()
     {
         mainGame.gameObject.SetActive(false);
+
+        if (!triggerWarp.gameObject.activeInHierarchy)
+            triggerWarp.gameObject.SetActive(true);
+
     }
 }
 

@@ -11,6 +11,11 @@ public class CollectingGameManager : MonoBehaviour
     public Slider progressBar;
     int slotIndex;
     int firstSlot = 0, secondSlot = 1;
+
+    public AbilityTutorialProgressiveDisclosureHandler abilityTutorialPDHandler;
+   public Coroutine coinSpawnCoroutine;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,27 +26,45 @@ public class CollectingGameManager : MonoBehaviour
     void Update()
     {
 
-        progressBar.value = coinsCollected;
+        if (!mainGame.activeInHierarchy)
+        {
+            progressBar.value = coinsCollected;
+        }
 
-       if(coinsProduced>=11)
+
+        if ((!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && coinsProduced >= 11) || coinsProduced >= 12)
         {
             collectingGame.SetActive(false);
             mainGame.SetActive(true);
 
+            if (coinSpawnCoroutine != null)
+                StopCoroutine(coinSpawnCoroutine);
+
+            Debug.Log("Trying to disable mini game");
             if (coinsCollected >= 10) //Max Score
             {
-                    
-                    craftingManager.CreateSlot(firstSlot);
-                craftingManager.CreateSlot(secondSlot);
-                
+                for (int slot = 0; slot < 2; slot++)
+                {
+                    craftingManager.CreateSlot(slot);
+                }
+
             }
             else if (coinsCollected >= 5) //Benchmark Score
             {
-                slotIndex = (craftingManager.finalOrderList[firstSlot] == null || craftingManager.finalOrderList[firstSlot]!=craftingManager.orderManager.listOfOrder[0]) ? firstSlot : secondSlot;
+                slotIndex = (craftingManager.finalOrderList[firstSlot] == null || craftingManager.finalOrderList[firstSlot] != craftingManager.orderManager.listOfOrder[0]) ? firstSlot : secondSlot;
                 craftingManager.CreateSlot(slotIndex);
             }
+
+            if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+                abilityTutorialPDHandler.AdvanceAbilityStep();
+
             coinsCollected = coinsProduced = 0;
         }
+                
+
+                
+            
+        
     }
 
     private void OnDisable()
@@ -53,4 +76,6 @@ public class CollectingGameManager : MonoBehaviour
     {
         
     }
+
 }
+

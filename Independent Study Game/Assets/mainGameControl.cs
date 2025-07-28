@@ -6,6 +6,7 @@ public class mainGameControl : MonoBehaviour
 {
     public GameObject tutorialPanel;
     public OrderManager orderManager;
+    public AbilityTutorialProgressiveDisclosureHandler abilityPDManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,5 +28,8 @@ public class mainGameControl : MonoBehaviour
 
         if (orderManager.feedBackImages[1].gameObject.activeInHierarchy)
             orderManager.feedBackImages[1].gameObject.SetActive(false);
+
+       
+
     }
 }

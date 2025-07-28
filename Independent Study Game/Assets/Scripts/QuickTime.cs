@@ -14,7 +14,14 @@ public class QuickTime : MonoBehaviour
     int slotIndex;
     // Start is called before the first frame update
 
+    public QuickEvent quickEvent;
+
     public Text goodText, okayText1, okayText2, badText1, badText2;
+
+    [SerializeField] private AbilityTutorialProgressiveDisclosureHandler abilityTutorialProgressiveDisclosureHandler;
+
+    public static bool quickTimeEnabled = false;
+
     void Start()
     {
         slider = gameObject.GetComponentInChildren<Slider>();
@@ -55,7 +62,7 @@ public class QuickTime : MonoBehaviour
 
         }
 
-       
+             craftMan.gameManager.pauseButton.gameObject.SetActive(false);
 
 
     }
@@ -64,41 +71,43 @@ public class QuickTime : MonoBehaviour
     {
         stop = true;
 
-        
 
-        if (slider.value > .51 && slider.value < .60)
-        {
-            goodRangeMet = true;
-            goodText.gameObject.SetActive(true);
-           
-        }
-        else if((slider.value<.80f && slider.value>.6f) ||(slider.value<.51&&slider.value>.25))
-        {
-            okRangeMet = true;
+        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+            slider.value = .55f;
 
-            if (slider.value < .80f && slider.value > .6f)
-                okayText1.gameObject.SetActive(true);
-
-            if(slider.value < .51 && slider.value > .25)
-                okayText2.gameObject.SetActive(true);
-
-        }
-        else
-        {
-            if ((slider.value < 1f && slider.value > .80f))
+            if (slider.value > .51 && slider.value < .60)
             {
-                badText2.gameObject.SetActive(true);
-            }
+                goodRangeMet = true;
+                goodText.gameObject.SetActive(true);
 
-            if ((slider.value < .25f && slider.value > 0f))
+            }
+            else if ((slider.value < .80f && slider.value > .6f) || (slider.value < .51 && slider.value > .25))
             {
-                badText1.gameObject.SetActive(true);
-            }
+                okRangeMet = true;
 
-            goodRangeMet = false;
-        }
-        TimeManager.ResetAFKTimer();
-        StartCoroutine(CreateIngredients());
+                if (slider.value < .80f && slider.value > .6f)
+                    okayText1.gameObject.SetActive(true);
+
+                if (slider.value < .51 && slider.value > .25)
+                    okayText2.gameObject.SetActive(true);
+
+            }
+            else
+            {
+                if ((slider.value < 1f && slider.value > .80f))
+                {
+                    badText2.gameObject.SetActive(true);
+                }
+
+                if ((slider.value < .25f && slider.value > 0f))
+                {
+                    badText1.gameObject.SetActive(true);
+                }
+
+                goodRangeMet = false;
+            }
+            TimeManager.ResetAFKTimer();
+            StartCoroutine(CreateIngredients());
     }
 
    IEnumerator CreateIngredients()
@@ -136,5 +145,18 @@ public class QuickTime : MonoBehaviour
         okRangeMet = false;
        
         slider.value = 0;
+
+   
+
+        quickTimeEnabled = true;
+    }
+
+    private void OnDisable()
+    {
+        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+            abilityTutorialProgressiveDisclosureHandler.AdvanceAbilityStep();
+        craftMan.gameManager.pauseButton.gameObject.SetActive(true);
+
+        quickTimeEnabled = false;
     }
 }

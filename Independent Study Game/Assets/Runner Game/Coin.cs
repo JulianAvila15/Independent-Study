@@ -8,25 +8,68 @@ public class Coin : MonoBehaviour
     float movementSpeed = 3;
     public ParticleSystem badCollision, goodCollision;
     bool hasCollided = false; // Flag to track if collision has occurred
+    bool pauseMovement=false;
+   [SerializeField]  GameObject highlight,tutorialArrowPD;
+    private AbilityTutorialProgressiveDisclosureHandler abilityTutorialProgressiveDisclosureHandler;
+    public bool canStartMoving = false, needToSlow = false;
+    float slowSpeedByAmount = .5f;
+    
+
+
+    private void Awake()
+    {
+        abilityTutorialProgressiveDisclosureHandler = (AbilityTutorialProgressiveDisclosureHandler)FindObjectOfType(typeof(AbilityTutorialProgressiveDisclosureHandler));
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         transformCoin = gameObject.GetComponent<Transform>();
-        if (CollectingGameManager.coinsProduced >= 11)
-            Destroy(gameObject);
+
+        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+        {
+            canStartMoving = abilityTutorialProgressiveDisclosureHandler.coinCanMove;
+            needToSlow = abilityTutorialProgressiveDisclosureHandler.coinMoveSlow;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        transformCoin.position -= new Vector3(0, movementSpeed * Time.deltaTime, 0);
+
+        if (needToSlow)
+        {
+            if (movementSpeed > 0 && transformCoin.position.y <= 2f)
+            {
+                movementSpeed = slowSpeedByAmount;
+                highlight.SetActive(true);
+                tutorialArrowPD.SetActive(true);
+            }
+               
+        }
+
+        if((!pauseMovement|| transformCoin.position.y >= 2f)||!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+            transformCoin.position -= new Vector3(0, movementSpeed * Time.deltaTime, 0);
+
+        if (!canStartMoving&& AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && transformCoin.position.y <= 2f && transformCoin.position.y >= .5f)
+        {
+            pauseMovement = true;
+            highlight.SetActive(true);
+            abilityTutorialProgressiveDisclosureHandler.coinHasSpawned = true;
+            tutorialArrowPD.SetActive(true);
+        }
+        else if(canStartMoving&&!needToSlow)
+        {
+            highlight.SetActive(false);
+            pauseMovement = false;
+        }
 
         if (transformCoin.position.y <= .5f)
         {
             if (!hasCollided) // Check if collision hasn't occurred already
             {
                 Instantiate(badCollision, transformCoin.position, Quaternion.identity);
+                CheckIfCanContinuePDTutorialAfterColliding();
                 Destroy(gameObject);
             }
         }
@@ -43,8 +86,23 @@ public class Coin : MonoBehaviour
             CollectingGameManager.coinsCollected++;
             hasCollided = true; // Set the flag to true to prevent further collisions
             TimeManager.ResetAFKTimer();
-            Destroy(gameObject);
 
+            if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+            {
+                CheckIfCanContinuePDTutorialAfterColliding();
+                if (pauseMovement)
+                    pauseMovement = false;
+            }
+
+            Destroy(gameObject);
+            
         }
     }
+
+    private void CheckIfCanContinuePDTutorialAfterColliding()
+    {
+        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+            abilityTutorialProgressiveDisclosureHandler.CheckIfCanContinueAfterCollectingCoin();
+    }
+
 }
