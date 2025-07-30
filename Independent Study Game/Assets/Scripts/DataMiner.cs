@@ -106,7 +106,6 @@ public class DataMiner : MonoBehaviour
             for (int i = 0; i < timeSpentOnEachLevel.Length; i++)
                 logString += ", " + timeSpentOnEachLevel[i];
 
-            Debug.Log(logString);
             StartCoroutine(WriteTextViaPHP(logString, "https://gamesux.com/fromunity_cookingcrafting.php")); //change php to game name (tbd)
          
         }
