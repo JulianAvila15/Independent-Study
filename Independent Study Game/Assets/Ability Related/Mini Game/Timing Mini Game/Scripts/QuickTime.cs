@@ -10,7 +10,6 @@ public class QuickTime : MonoBehaviour
     public Slider slider;
     private bool reachedMax,stop;
     public Button stopButton;
-    public CraftingManager craftMan;
     int slotIndex;
     // Start is called before the first frame update
 
@@ -21,6 +20,8 @@ public class QuickTime : MonoBehaviour
     [SerializeField] private AbilityTutorialProgressiveDisclosureHandler abilityTutorialProgressiveDisclosureHandler;
 
     public static bool quickTimeEnabled = false;
+
+[SerializeField]    ManagerofManagers managerHub;
 
     void Start()
     {
@@ -62,7 +63,7 @@ public class QuickTime : MonoBehaviour
 
         }
 
-             craftMan.gameManager.pauseButton.gameObject.SetActive(false);
+             managerHub.gameManager.pauseButton.gameObject.SetActive(false);
 
 
     }
@@ -106,7 +107,7 @@ public class QuickTime : MonoBehaviour
 
                 goodRangeMet = false;
             }
-            TimeManager.ResetAFKTimer();
+            managerHub.timeManager.ResetAFKTimer();
             StartCoroutine(CreateIngredients());
     }
 
@@ -114,12 +115,12 @@ public class QuickTime : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         gameObject.SetActive(false);
-        TimeManager.ResetAFKTimer();
+        managerHub.timeManager.ResetAFKTimer();
 
         if (okRangeMet)
         {
             slotIndex = 2;
-            craftMan.CreateSlot(slotIndex);
+            managerHub.craftingManager.FillInSlot(slotIndex,true);
         }
 
         if (goodRangeMet)
@@ -127,7 +128,7 @@ public class QuickTime : MonoBehaviour
             for (int i = 0; i < 2; i++)
             {
                 slotIndex = i + 2;
-                craftMan.CreateSlot(slotIndex);
+                managerHub.craftingManager.FillInSlot(slotIndex,true);
             }
         }
                 
@@ -155,7 +156,7 @@ public class QuickTime : MonoBehaviour
     {
         if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
             abilityTutorialProgressiveDisclosureHandler.AdvanceAbilityStep();
-        craftMan.gameManager.pauseButton.gameObject.SetActive(true);
+        managerHub.gameManager.pauseButton.gameObject.SetActive(true);
 
         quickTimeEnabled = false;
     }

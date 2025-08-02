@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     private Animator m_Animator;
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
     private Vector3 m_Velocity = Vector3.zero;
-
+   private Vector3 playerTargetVelocity = new Vector2(0,0);
 
     private float move = 0;
     private bool jump = false;
@@ -32,13 +32,11 @@ public class Player : MonoBehaviour
     [System.Serializable]
     public class BoolEvent : UnityEvent<bool> { }
 
-    public bool playerCanMove;
+    public bool playerCanMoveInPDTutorial;
 
-    public bool playerCanJump;
+    public bool playerCanJumpInPDTutorial;
 
     [SerializeField] private AbilityTutorialProgressiveDisclosureHandler abilityPDHandler;
-
-    GameManager gameMan;
 
     public Vector3 playerSpawnPosition = new Vector3(-24.61891f, 4.247815f, -23.54283f);
 
@@ -47,6 +45,8 @@ public class Player : MonoBehaviour
     public CoinSpawner coinSpawner;
     public bool canMoveRight=true, canMoveLeft=true;
 
+ [SerializeField]   ManagerofManagers managerHub;
+ 
     private void Awake()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -55,7 +55,8 @@ public class Player : MonoBehaviour
         if (OnLandEventInTutorial == null)
             OnLandEventInTutorial = new UnityEvent();
 
-        gameMan = abilityPDHandler.craftingManager.gameManager;
+
+       
     }
 
     private void Start()
@@ -79,7 +80,7 @@ public class Player : MonoBehaviour
         //Access the Animation clip name
         string clipName = currentClipInfo[0].clip.name;
 
-        if (gameMan.tutorialType != GameManager.TutorialType.progressiveDisclosure || abilityPDHandler.completedTutorials.Contains("Collecting") || playerCanJump)
+        if (PlayerCanJump())
         {
 
             jump = Input.GetButton("Jump");
@@ -116,10 +117,9 @@ public class Player : MonoBehaviour
                 m_Grounded = true;
                 if (!wasGrounded && m_Rigidbody2D.velocity.y <= 0.01f)
                 {
-                    if (playerCanJump && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+                    if (playerCanJumpInPDTutorial && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
                     {
                         OnLandEventInTutorial.Invoke();
-                        Debug.Log("player successfully landed");
                     }
 
                         if(!coinSpawner.startedSpawning)
@@ -138,19 +138,20 @@ public class Player : MonoBehaviour
 
 	public void Move(float move, bool jump)
 	{
-        if (gameMan.tutorialType!=GameManager.TutorialType.progressiveDisclosure||abilityPDHandler.completedTutorials.Contains("Collecting")||playerCanMove)
+        if (PlayerCanMove())
         {
             //only control the player if grounded or airControl is turned on
             if (m_Grounded || m_AirControl)
             {
                 // Move the character by finding the target velocity
 
+                playerTargetVelocity.x = move * m_Speed;
+                playerTargetVelocity.y = m_Rigidbody2D.velocity.y;
 
-                Vector3 targetVelocity = new Vector2(move * m_Speed, m_Rigidbody2D.velocity.y);
                 // And then smoothing it out and applying it to the character
 
-               
-                m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+
+                m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, playerTargetVelocity, ref m_Velocity, m_MovementSmoothing);
 
                 // If the input is moving the player right and the player is facing left...
                 if (move > 0 && !m_FacingRight)
@@ -199,5 +200,16 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         gameObject.transform.position = playerSpawnPosition;
+    }
+
+
+    bool PlayerCanJump()
+    {
+        return managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || abilityPDHandler.completedTutorials.Contains("Collecting") || playerCanJumpInPDTutorial;
+    }
+
+    bool PlayerCanMove()
+    {
+        return managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || abilityPDHandler.completedTutorials.Contains("Collecting") || playerCanMoveInPDTutorial;
     }
 }

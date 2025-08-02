@@ -16,7 +16,6 @@ public class MiniGamePDHandler : MonoBehaviour
     [SerializeField] private Player playerObj;
     bool collectorHasJumped;
     public bool coinHasSpawned = false, coinCanMove = false;
-    Coin spawnedCoin;
     public bool coinMoveSlow = false;
     private Coroutine waitForLanding = null;
     [SerializeField] private Image leftDirectionArrow, rightDirectionArrow, upDiectionArrow, spaceBarImage, aKeyImage, dKeyImage;
@@ -48,8 +47,8 @@ public class MiniGamePDHandler : MonoBehaviour
 
         if (currentAbilityName == "Collecting")//if can click through panel;
         {
-            playerObj.playerCanMove = current_step.playerCanMove;
-            playerObj.playerCanJump = current_step.playerCanJump;
+            playerObj.playerCanMoveInPDTutorial = current_step.playerCanMove;
+            playerObj.playerCanJumpInPDTutorial = current_step.playerCanJump;
 
             coinSpawner.canStartSpawningInTutorial = current_step.canStartSpawningCoin;
 
@@ -259,5 +258,15 @@ public class MiniGamePDHandler : MonoBehaviour
     internal void EndDemonstratingLosing()
     {
         triggerWarp.transform.position = playerObj.playerSpawnPosition;
+    }
+
+  public  bool NeedToStopCoinDuringTutorial()
+    {
+        return !coinCanMove && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered;
+    }
+
+    public bool InCollectingMiniGameTutorial()
+    {
+        return !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || (mainAbilityPDHandler.GetStepTutorialType() == TutorialStepType.collectingMiniGameStart);
     }
 }

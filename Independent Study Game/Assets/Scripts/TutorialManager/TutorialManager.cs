@@ -5,12 +5,10 @@ using UnityEngine.UI;
 using TMPro;
 public class TutorialManager : MonoBehaviour
 {
-    public GameManager gameManager;
-    public CraftingManager craftingManager;
+    [SerializeField]ManagerofManagers managerHub;
     public Button continueButton,powerUpButton,collectingGameButton;
     public GameObject tutorialPanel,tutorialPowerUp,tutorialCollectingGame,wallOfTextInstructions;
-    public TMP_Text textbox,powerUpTextBox;
-    public TimeManager timeManager;
+    public TMP_Text textbox, powerUpTextBox;
      [SerializeField] private IntroProgressiveDisclosureHandler introProgressiveDisclosure;
     public Image summonSprite;
     public static bool penguinTutorialShown = false, adventurerTutorialShown = false, dragonTutorialShown = false, coinTutorialShown = false, timingMiniGameTutorialShown = false;
@@ -20,17 +18,25 @@ public class TutorialManager : MonoBehaviour
     public int  numOfSentences;//integers for call out numbers and the number of sentences per call out
    public AbilityTutorialProgressiveDisclosureHandler abilityPDHandler;
 
+    private void Awake()
+    {
+        if (managerHub != null && managerHub.tutorialManager == null)
+            managerHub.tutorialManager = gameObject.GetComponent<TutorialManager>();
+    }
+
 
     // Start is called before the first frame update
     void Start()
     {
 
-        
-            switch (gameManager.tutorialType)
+    
+
+
+            switch (managerHub.gameManager.tutorialType)
             {
                 case GameManager.TutorialType.wallOfText:
 
-                if (!gameManager.inTestingMode)
+                if (!managerHub.gameManager.inTestingMode)
                     tutorialPanel.SetActive(true);
 
                     tutorialPanel.GetComponent<Image>().color = new Color(255, 255, 255);
@@ -40,7 +46,7 @@ public class TutorialManager : MonoBehaviour
                     break;
                 case GameManager.TutorialType.progressiveDisclosure:
 
-                if (!gameManager.inTestingMode)
+                if (!managerHub.gameManager.inTestingMode)
                     tutorialPanel.SetActive(true);
 
                     introProgressiveDisclosure.gameObject.SetActive(true);
@@ -57,7 +63,7 @@ public class TutorialManager : MonoBehaviour
     public void SetSummonTutorial(string powerUpText,int spriteIndex,int abilityDataIndex)
     {
 
-        if (gameManager.tutorialType == GameManager.TutorialType.wallOfText)
+        if (managerHub.gameManager.tutorialType == GameManager.TutorialType.wallOfText)
         {
             powerUpTextBox.text = powerUpText;
             tutorialPowerUp.SetActive(true);
@@ -80,7 +86,7 @@ public class TutorialManager : MonoBehaviour
     public void ContinueButtonIsPressed()
     {
 
-        switch (gameManager.tutorialType)
+        switch (managerHub.gameManager.tutorialType)
         {
             case GameManager.TutorialType.wallOfText:
                 tutorialPanel.gameObject.SetActive(false);
@@ -99,12 +105,12 @@ public class TutorialManager : MonoBehaviour
     public void PowerUpContinueButtonIsPressed()
     {
 
-        switch (gameManager.tutorialType)
+        switch (managerHub.gameManager.tutorialType)
         {
            
             case GameManager.TutorialType.wallOfText:
                 tutorialPowerUp.gameObject.SetActive(false);
-                TimeManager.ResetAFKTimer();
+                managerHub.timeManager.ResetAFKTimer();
                 break;
             case GameManager.TutorialType.progressiveDisclosure:
                 //add logic to select the certain index of the corresponding ability
@@ -119,6 +125,19 @@ public class TutorialManager : MonoBehaviour
 
     }
 
+   public bool NoPDTutorialOccuring()
+    {
+       return  IntroProgressiveDisclosureHandler.introPDTutorialFinished && !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered;
+    }
+    
+    public bool IntroTutorialOccuring()
+    {
+        return managerHub.gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure && !IntroProgressiveDisclosureHandler.introPDTutorialFinished;
+    }
 
-  
+    public bool AbilityPDTutorialOccuring()
+    {
+      return  managerHub.gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered;
+    }
+
 }

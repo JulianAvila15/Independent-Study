@@ -6,14 +6,8 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
 
-   public static bool pause = false;
-    public OrderManager orderManager;
-    public CraftingManager craftingManager;
-
-    public TimeManager timeManager;
+    public static bool pause = false;
     public bool timeCompleted = false;
-
-    public TutorialManager tutorialManager;
     public Image pausePanel;
     public Button pauseButton,continueButton;
     public Canvas mainCanvas,workIDCanvas,bgCanvas;
@@ -27,6 +21,9 @@ public class GameManager : MonoBehaviour
     public static bool gameOver = false;
 
     [SerializeField] private GameObject collectingGame, endGameScreen, mainGame;
+
+  [SerializeField]  ManagerofManagers managerHub;
+
     public enum ProgressFeedbackType
     {
         progressBar,
@@ -47,14 +44,23 @@ public class GameManager : MonoBehaviour
 
     public ProgressFeedbackType progressType;
     public TutorialType tutorialType;
+
+    private void Awake()
+    {
+        if (managerHub != null && managerHub.gameManager == null)
+            managerHub.gameManager = gameObject.GetComponent<GameManager>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         
         pausePanel.gameObject.SetActive(false);
         StartorStopGame(false);
-        timeManager.enabled = true;
+        managerHub.timeManager.enabled = true;
         errorMessagePanel.SetActive(false);
+
+   
 
         switch (tutorialType)
         {
@@ -105,7 +111,7 @@ public class GameManager : MonoBehaviour
             EnterWorkID();
         }
 
-        if (pausePanel.gameObject.activeInHierarchy || orderManager.newLevelProgressed.activeInHierarchy || tutorialManager.tutorialPanel.activeInHierarchy || tutorialManager.tutorialPowerUp.activeInHierarchy)
+        if (pausePanel.gameObject.activeInHierarchy || managerHub.orderManager.newLevelProgressed.activeInHierarchy || managerHub.tutorialManager.tutorialPanel.activeInHierarchy || managerHub.tutorialManager.tutorialPowerUp.activeInHierarchy)
         {
             pauseButton.gameObject.SetActive(false);
         }
@@ -114,13 +120,13 @@ public class GameManager : MonoBehaviour
             pauseButton.gameObject.SetActive(true);
         }
 
-        if (timeCompleted && orderManager.currLevel >= 5)
+        if (timeCompleted && managerHub.orderManager.currLevel >= 5)
             EndGame();
     }
 
     public void Pause()//Pauses game
     {
-      if(!(orderManager.newLevelProgressed.activeInHierarchy || workIDCanvas.gameObject.activeInHierarchy||endGameScreen.activeInHierarchy))
+      if(!(managerHub.orderManager.newLevelProgressed.activeInHierarchy || workIDCanvas.gameObject.activeInHierarchy||endGameScreen.activeInHierarchy))
         {
             pausePanel.gameObject.SetActive(true);
 
@@ -130,8 +136,8 @@ public class GameManager : MonoBehaviour
             isPausedByFocusLoss = false;
         }
 
-        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered&&tutorialManager.abilityPDHandler.pdTutorialPanelAbility.activeInHierarchy)
-            tutorialManager.abilityPDHandler.pdTutorialPanelAbility.SetActive(false);
+        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered&&managerHub.tutorialManager.abilityPDHandler.pdTutorialPanelAbility.activeInHierarchy)
+            managerHub.tutorialManager.abilityPDHandler.pdTutorialPanelAbility.SetActive(false);
 
         pause = true;
 
@@ -149,8 +155,8 @@ public class GameManager : MonoBehaviour
 
         pause = false;
 
-        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered&&!tutorialManager.abilityPDHandler.pdTutorialPanelAbility.activeInHierarchy)
-            tutorialManager.abilityPDHandler.pdTutorialPanelAbility.SetActive(true);
+        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered&&!managerHub.tutorialManager.abilityPDHandler.pdTutorialPanelAbility.activeInHierarchy)
+            managerHub.tutorialManager.abilityPDHandler.pdTutorialPanelAbility.SetActive(true);
 
         Time.timeScale = 1f;//continue coroutines
 
@@ -179,27 +185,14 @@ public class GameManager : MonoBehaviour
         workIDCanvas.gameObject.SetActive(!trueOrFalse);
         mainCanvas.gameObject.SetActive(trueOrFalse);
         bgCanvas.gameObject.SetActive(mainCanvas.isActiveAndEnabled);
-       
-    }
 
-    public void HandleErrorMessage(string specifiedErrorMessage)
-    {
-        errorMessagePanel.SetActive(true);
-        errorMessageText.gameObject.GetComponent<TextMeshProUGUI>().text = specifiedErrorMessage;
-          StartCoroutine(HideErrorMessage());
-    }
-
-    IEnumerator HideErrorMessage()
-    {
-        yield return new WaitForSeconds(6f);
-        errorMessagePanel.SetActive(false);
     }
 
     private void OnApplicationFocus(bool hasFocus)
     {
         // If the application has lost focus and we haven't already paused it,
         // then call the Pause function.
-        if (!hasFocus && !isPausedByFocusLoss&&!inTestingMode&&!QuickTime.quickTimeEnabled&&!orderManager.newLevelProgressed.activeInHierarchy)
+        if (!hasFocus && !isPausedByFocusLoss&&!inTestingMode&&!QuickTime.quickTimeEnabled&&!managerHub.orderManager.newLevelProgressed.activeInHierarchy)
         {
 
             // Set our flag to true so we know the pause was triggered by focus loss.
@@ -212,7 +205,7 @@ public class GameManager : MonoBehaviour
     {
         //handling when game is over (Potentially put in game manager)
        
-            DataMiner.currLevel = orderManager.currLevel;
+            DataMiner.currLevel = managerHub.orderManager.currLevel;
             GameManager.gameOver = true;
 
             if (collectingGame.activeInHierarchy)
@@ -221,11 +214,11 @@ public class GameManager : MonoBehaviour
                 mainGame.SetActive(true);
             }
 
-            if (timeManager.GetTutorialTimeIntro() > 0)
-                timeManager.SetTimeCompletedGame();
+            if (managerHub.timeManager.GetTutorialTimeIntro() > 0)
+                managerHub.timeManager.SetTimeCompletedGame();
             endGameScreen.SetActive(true);
 
-        timeManager.SetAbilityTutorialTime();
+        managerHub.timeManager.SetAbilityTutorialTime();
 
             
             //log the data once done

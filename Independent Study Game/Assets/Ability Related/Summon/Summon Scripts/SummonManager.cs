@@ -7,12 +7,11 @@ using System.Linq;
 
 public class SummonManager : MonoBehaviour
 {
-
-    public CraftingManager craftingMan;
-    public GameManager gameManager;
-    public Image abilityImage1;
-    public Image abilityImage2;
-    public Image abilityImage3;
+   [SerializeField] ManagerofManagers managerHub;
+ 
+    public Image summonImage1;
+    public Image summonImage2;
+    public Image summonImage3;
 
     public GameObject newLevelAlert, powerUpTutorialPanel;
 
@@ -21,19 +20,19 @@ public class SummonManager : MonoBehaviour
     [Header("Ability1")]
     public float coolDown1;
     bool isCoolDown1 = false;
-    public KeyCode ability1;
+    public KeyCode summon1;
     bool pressed1 = false;
 
     [Header("Ability2")]
     public float coolDown2;
     bool isCoolDown2 = false;
-    public KeyCode ability2;
+    public KeyCode summon2;
     bool pressed2 = false;
 
     [Header("Ability3")]
     public float coolDown3;
     bool isCoolDown3 = false;
-    public KeyCode ability3;
+    public KeyCode summon3;
     bool pressed3 = false;
 
     public DataMiner miner;
@@ -43,10 +42,30 @@ public class SummonManager : MonoBehaviour
 
     [SerializeField] private GameObject mainGame;
 
-    [SerializeField] private AbilityTutorialProgressiveDisclosureHandler abilityPDTutorialManager;
+    //belong to summon handler
+    static public bool canClickCraftButton = false;
+    public bool firstTimeUsePenguin = false;
+    public bool penguinItemSuccessfullyDropped = false;
+    Color penguinButtonColor;
+    public GameObject penguinButton;
+    public Image penguinImage;
+    private int penguinProspectiveSlotNum = 1, messengerProspectiveSlotNum = 0;
+    public int penguinSlot = -1;//Gets the slot the penguin has chosen to color blue
+
+    
+    public enum summonIndex
+    {
+        messenger = 0,
+        penguin = 1,
+        dragon = 2
+    }
+
 
     private void Awake()
     {
+        if (managerHub != null && managerHub.summonManager == null)
+            managerHub.summonManager = gameObject.GetComponent<SummonManager>();
+
         for (int i = 0; i < powerUps.Length; i++)
         {
             powerUps[i].SetActive(false);
@@ -56,14 +75,13 @@ public class SummonManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        abilityImage1.fillAmount = abilityImage2.fillAmount = abilityImage3.fillAmount = 0;
+        summonImage1.fillAmount = summonImage2.fillAmount = summonImage3.fillAmount = 0;
 
         spawnPosition = new Vector3(-12.13f, -2.4f, 0);
 
         dragonPosition = new Vector3(12.13f, -2f, 0);
 
-
-
+        penguinButtonColor = penguinButton.GetComponent<Image>().color;
     }
 
     // Update is called once per frame
@@ -73,60 +91,70 @@ public class SummonManager : MonoBehaviour
 
         //messenger
         if (pressed1)
-            TriggerAbility(ref pressed1, ref isCoolDown1, "Messenger", ability1, 0, spawnPosition, ref abilityImage1, coolDown1);
+            TriggerAbility(ref pressed1, ref isCoolDown1, "Messenger", summon1, 0, spawnPosition, ref summonImage1, coolDown1);
         //penguin
         if (pressed2)
-            TriggerAbility(ref pressed2, ref isCoolDown2, "Penguin", ability2, 1, spawnPosition, ref abilityImage2, coolDown2);
+            TriggerAbility(ref pressed2, ref isCoolDown2, "Penguin", summon2, 1, spawnPosition, ref summonImage2, coolDown2);
 
         //dragon
         if (pressed3)
-            TriggerAbility(ref pressed3, ref isCoolDown3, "Dragon", ability3, 2, dragonPosition, ref abilityImage3, coolDown3);
+            TriggerAbility(ref pressed3, ref isCoolDown3, "Dragon", summon3, 2, dragonPosition, ref summonImage3, coolDown3);
+
+        if (managerHub.orderManager.penguinUnlocked && (!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || managerHub.abilityPDManager.GetStepTutorialType() != TutorialStepType.FlashButton))
+        {
+
+            HandleSummonButtonEnableorDisable();
+        }
+
+        if (penguinSlot > 0 && managerHub.craftingManager.craftingSlots[penguinSlot].item != null && managerHub.craftingManager.finalOrderList[penguinSlot].itemName != managerHub.orderManager.listOfOrder[penguinSlot].itemName)
+           managerHub.craftingManager.craftingSlots[penguinSlot].GetComponent<Image>().color = Color.yellow;
+
     }
 
-    void TriggerAbility(ref bool pressed, ref bool isCoolDown, string abilityName, KeyCode abilityKeyCode, int powerUpIndex, Vector3 spawnPosition, ref Image abilityImage, float coolDown)
+    void TriggerAbility(ref bool pressed, ref bool isCoolDown, string summonName, KeyCode summonKeyCode, int powerUpIndex, Vector3 spawnPosition, ref Image summonImage, float coolDown)
     {
         if (pressed && isCoolDown == false)
         {
             isCoolDown = true;
-            ExecuteAbility(powerUps[powerUpIndex], abilityImage, isCoolDown, spawnPosition);
+            ExecuteAbility(powerUps[powerUpIndex], summonImage, isCoolDown, spawnPosition);
 
             if (!Helper.penguinHasShownIngredient && CraftingManager.helperName == "Penguin")
-                craftingMan.penguinItemSuccessfullyDropped = false;
+                penguinItemSuccessfullyDropped = false;
 
-            if (abilityPDTutorialManager != null && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
-                abilityPDTutorialManager.OnAbilityButtonClicked();
+            if (managerHub.abilityPDManager != null && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+                managerHub.abilityPDManager.OnAbilityButtonClicked();
 
         }
 
-        if (gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || abilityPDTutorialManager.completedTutorials.Contains(abilityName) && abilityPDTutorialManager.completedTutorials.Count > 0 || abilityPDTutorialManager.CheckIfCoolDownEnabled())
+        if (managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || managerHub.abilityPDManager.completedTutorials.Contains(summonName) && managerHub.abilityPDManager.completedTutorials.Count > 0 || managerHub.abilityPDManager.CheckIfCoolDownEnabled())
         {
             if (isCoolDown == true)
             {
                 if (!(newLevelAlert.activeInHierarchy || powerUpTutorialPanel.activeInHierarchy))
-                    CoolDown(abilityImage, coolDown, ref isCoolDown, ref pressed);
+                    CoolDown(summonImage, coolDown, ref isCoolDown, ref pressed);
             }
         }
 
     }
 
-    private void ExecuteAbility(GameObject powerUp, Image abilityImage, bool isCoolDown, Vector3 spawnPosition)
+    private void ExecuteAbility(GameObject powerUp, Image summonImage, bool isCoolDown, Vector3 spawnPosition)
     {
-        abilityImage.fillAmount = 1;
+        summonImage.fillAmount = 1;
         createdObject = Instantiate(powerUp, spawnPosition, Quaternion.identity);
         createdObject.transform.parent = mainGame.transform;
         createdObject.gameObject.SetActive(true);
     }
 
-    private void CoolDown(Image abilityImage, float coolDown, ref bool isCoolDown, ref bool pressed)
+    private void CoolDown(Image summonImage, float coolDown, ref bool isCoolDown, ref bool pressed)
     {
 
         if (!GameManager.pause)
         {
-            abilityImage.fillAmount -= 1 / coolDown * Time.deltaTime;
+            summonImage.fillAmount -= 1 / coolDown * Time.deltaTime;
 
-            if (abilityImage.fillAmount <= 0)
+            if (summonImage.fillAmount <= 0)
             {
-                abilityImage.fillAmount = 0;
+                summonImage.fillAmount = 0;
                 isCoolDown = false;
                 pressed = false;
             }
@@ -145,18 +173,18 @@ public class SummonManager : MonoBehaviour
                     case "Messenger":
                         pressed1 = true;
                         if (isCoolDown1 == false)
-                            DataMiner.abilityandEventCount[0]++;
+                            DataMiner.summonandEventCount[0]++;
                         break;
                     case "Penguin":
                         pressed2 = true;
                         CraftingManager.helperName = "Penguin";
                         if (isCoolDown2 == false)
-                            DataMiner.abilityandEventCount[1]++;
+                            DataMiner.summonandEventCount[1]++;
                         break;
                     case "Dragon":
                         pressed3 = true;
                         if (isCoolDown3 == false)
-                            DataMiner.abilityandEventCount[2]++;
+                            DataMiner.summonandEventCount[2]++;
                         break;
                     default:
                         break;
@@ -164,13 +192,90 @@ public class SummonManager : MonoBehaviour
 
             }
 
-            TimeManager.ResetAFKTimer();
+            managerHub.timeManager.ResetAFKTimer();
 
         }
 
     }
+
+    private void HandleSummonButtonEnableorDisable()
+    {
+
+        if (managerHub.craftingManager.finalOrderList[penguinProspectiveSlotNum] != null && managerHub.orderManager.listOfOrder[penguinProspectiveSlotNum].itemName == managerHub.craftingManager.finalOrderList[penguinProspectiveSlotNum].itemName)
+        {
+            penguinButton.GetComponent<Button>().interactable = false;
+            penguinImage.color = penguinButton.GetComponent<Image>().color = penguinButton.GetComponent<Button>().colors.disabledColor;
+        }
+        else
+        {
+            penguinButton.GetComponent<Button>().interactable = true;
+            penguinButton.GetComponent<Image>().color = penguinButtonColor;
+            penguinImage.color = Color.white;
+        }
+    }
+
+
+    public void FillPenguinSlot()
+    {
+
+
+        if (mainGame.activeInHierarchy == true)//if the penguin has shown the ingredient
+        {
+            if(penguinProspectiveSlotNum>0)
+            managerHub.craftingManager.FillInSlot(penguinProspectiveSlotNum,false);
+
+
+            if (managerHub.craftingManager.finalOrderList[penguinSlot] != null && managerHub.orderManager.listOfOrder[penguinSlot].itemName == managerHub.craftingManager.finalOrderList[penguinSlot].itemName)//if the correct item is in the in the penguin slot
+            {
+                penguinItemSuccessfullyDropped = true;
+
+                managerHub.orderManager.listOfOrder[penguinSlot].imageOfItem.color = managerHub.craftingManager.imageCraftingSlots[penguinSlot].color = Color.white;
+                Helper.penguinHasShownIngredient = false;
+
+
+                if (!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+                    penguinSlot = -1;
+
+                if (firstTimeUsePenguin)
+                {
+                    managerHub.abilityPDManager.AdvanceAbilityStep();
+                    firstTimeUsePenguin = false;
+                }
+            }
+        }
+    }
+
+    public bool PenguinInCurrentUse()
+    {
+        return penguinSlot > 0 && managerHub.orderManager.listOfOrder[penguinSlot] == managerHub.craftingManager.currentItem;
+    }
+
+  public bool CanSafetlyDropItemWhenPenguinIsActive(int neareSlotSelectedIndex=1)
+    {
+        return (PenguinInCurrentUse() && (CanSafetlyDropItemWhenPenguinActiveAndItemDragged(neareSlotSelectedIndex) || CanSafetlyDropItemWhenPenguinPenguinActiveAndItemClicked()));
+    }
+
+ 
+
+     bool CanSafetlyDropItemWhenPenguinActiveAndItemDragged(int nearestSlotIndex)
+    {
+        return (((managerHub.craftingManager.craftingSlots[nearestSlotIndex] != managerHub.craftingManager.craftingSlots[penguinSlot] && managerHub.craftingManager.currentItem.itemName != managerHub.orderManager.listOfOrder[penguinSlot].itemName)
+            || (managerHub.craftingManager.currentItem == managerHub.orderManager.listOfOrder[penguinSlot])));
+    }
+
+
+     bool CanSafetlyDropItemWhenPenguinPenguinActiveAndItemClicked()
+    {
+      return  (Helper.penguinHasShownIngredient && managerHub.craftingManager.currentItem != null && managerHub.craftingManager.craftingSlots[managerHub.summonManager.penguinSlot].item == null && managerHub.orderManager.listOfOrder[managerHub.summonManager.penguinSlot].itemName == managerHub.craftingManager.currentItem.itemName);
+    }
+    
+
     private bool CheckIfCanBePressed(string summonName)
     {
-        return gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || (abilityPDTutorialManager.GetCurrentAbilityDataName() != null && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && (abilityPDTutorialManager.GetCurrentAbilityDataName() == summonName));
+        return managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || (managerHub.abilityPDManager.GetCurrentAbilityDataName() != null && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && (managerHub.abilityPDManager.GetCurrentAbilityDataName() == summonName));
     }
+
+
+
+
 }

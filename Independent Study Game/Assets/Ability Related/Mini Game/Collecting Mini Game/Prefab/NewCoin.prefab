@@ -294,6 +294,7 @@ MonoBehaviour:
   tutorialArrowPD: {fileID: 1534131734845790476}
   canStartMoving: 0
   needToSlow: 0
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!61 &7229293163254690869
 BoxCollider2D:
   m_ObjectHideFlags: 0

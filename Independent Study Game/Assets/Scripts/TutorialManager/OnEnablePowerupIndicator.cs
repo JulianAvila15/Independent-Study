@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class OnEnablePowerupIndicator : MonoBehaviour
 {
 
-    public TutorialManager tutorialManager;
+ [SerializeField]   ManagerofManagers managerHub;
     string wallOfTextSentences;
     int spriteIndex;
     int powerUpAbilityDataIndex;
@@ -40,7 +40,7 @@ public class OnEnablePowerupIndicator : MonoBehaviour
     {
 
 
-        if(!(tutorialManager.gameManager.tutorialType==GameManager.TutorialType.noTutorial))
+        if(!(managerHub.gameManager.tutorialType==GameManager.TutorialType.noTutorial))
         {
             switch (gameObject.name)
             {
@@ -100,10 +100,10 @@ public class OnEnablePowerupIndicator : MonoBehaviour
             }
 
             if(!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
-            tutorialManager.SetSummonTutorial(wallOfTextSentences, spriteIndex, powerUpAbilityDataIndex);
+            managerHub.tutorialManager.SetSummonTutorial(wallOfTextSentences, spriteIndex, powerUpAbilityDataIndex);
 
         }
-        TimeManager.ResetAFKTimer();
+        managerHub.timeManager.ResetAFKTimer();
 
 
     }

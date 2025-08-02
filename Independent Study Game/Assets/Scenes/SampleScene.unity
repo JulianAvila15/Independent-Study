@@ -658,6 +658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: LemonPie
+  imageOfItem: {fileID: 0}
 --- !u!114 &51105534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -899,8 +900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 854a20801d578d54e82ded24707373c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1870590018}
-  craftingManager: {fileID: 576501842}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
   continueButton: {fileID: 1631645539}
   powerUpButton: {fileID: 2002212323}
   collectingGameButton: {fileID: 0}
@@ -910,7 +910,6 @@ MonoBehaviour:
   wallOfTextInstructions: {fileID: 1692100065}
   textbox: {fileID: 0}
   powerUpTextBox: {fileID: 74898965}
-  timeManager: {fileID: 1708555524}
   introProgressiveDisclosure: {fileID: 1611155721}
   summonSprite: {fileID: 1055809077}
   summonSpriteImages:
@@ -2377,6 +2376,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1351995473881903078, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
         type: 3}
+      propertyPath: managerHub
+      value: 
+      objectReference: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300,
+        type: 2}
+    - target: {fileID: 1351995473881903078, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
+        type: 3}
       propertyPath: orderManager
       value: 
       objectReference: {fileID: 1204447452}
@@ -2400,6 +2405,11 @@ PrefabInstance:
       propertyPath: craftingManager
       value: 
       objectReference: {fileID: 576501842}
+    - target: {fileID: 1351995473881903078, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
+        type: 3}
+      propertyPath: dragonCeilOffset
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 1351995473881903078, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
         type: 3}
       propertyPath: pdAbilityManager
@@ -3956,6 +3966,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6833906649012761111, guid: c0693a95e918f384586a12ede5f1f991,
         type: 3}
+      propertyPath: managerHub
+      value: 
+      objectReference: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300,
+        type: 2}
+    - target: {fileID: 6833906649012761111, guid: c0693a95e918f384586a12ede5f1f991,
+        type: 3}
       propertyPath: coinSpawner
       value: 
       objectReference: {fileID: 1560455792}
@@ -4292,7 +4308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ede62e519837e489fea05e5f94247e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 67446103}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!114 &379198100 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4879523451531760206, guid: 6362e4c7b263e5b49a5a8764e85b8743,
@@ -4847,7 +4863,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ede62e519837e489fea05e5f94247e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 67446103}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!850595691 &436100542
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -6577,6 +6593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e3ff5a8b5e4a64cbf5315a3ed0a606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
   currentItem: {fileID: 0}
   customCursor: {fileID: 1117957700}
   craftingSlots:
@@ -6584,6 +6601,16 @@ MonoBehaviour:
   - {fileID: 863084636}
   - {fileID: 1598051622}
   - {fileID: 2058442138}
+  imageCraftingSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  craftingSlotPositions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   ingredientsList:
   - {fileID: 2093980320}
   - {fileID: 358503446}
@@ -6622,10 +6649,8 @@ MonoBehaviour:
   - {fileID: 0}
   result: {fileID: 0}
   resultingItem: {fileID: 0}
-  orderManager: {fileID: 1204447452}
-  tutorialManager: {fileID: 67446103}
-  pdIntroManager: {fileID: 1611155721}
   craftButton: {fileID: 1305244434}
+  numberOfCraftingSlots: 0
   setsOfIngredients:
   - {fileID: 1066549038}
   - {fileID: 870916130}
@@ -6638,13 +6663,11 @@ MonoBehaviour:
   setIndex: 0
   grayImage: {fileID: 480335082}
   mainGame: {fileID: 723197336}
-  gameManager: {fileID: 1870590018}
-  highlightedSlotIndex_ProgressiveDisclosureTutorial: 0
-  abilityPDManager: {fileID: 1683268336}
-  firstTimeUsePenguin: 0
-  penguinItemSuccessfullyDropped: 0
-  penguinButton: {fileID: 366598015}
-  penguinImage: {fileID: 824715476}
+  selectedSlotIndex: 0
+  selectedSlotIndexDivisor: 4
+  prevIngredientSetCount: -1
+  prevSetIndex: -1
+  nearestSlotIndex: -1
 --- !u!1 &576845193
 GameObject:
   m_ObjectHideFlags: 0
@@ -8200,9 +8223,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72172eef4efba248b4b5d51788aefcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinsCollected: 0
+  coinsProduced: 0
   collectingGame: {fileID: 362793371}
   mainGame: {fileID: 723197336}
-  craftingManager: {fileID: 576501842}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
   progressBar: {fileID: 67674332}
   abilityTutorialPDHandler: {fileID: 1683268336}
 --- !u!1 &723197336
@@ -8790,7 +8815,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &745094318
 Transform:
   m_ObjectHideFlags: 0
@@ -9057,7 +9082,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ede62e519837e489fea05e5f94247e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 67446103}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!114 &803200182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9718,7 +9743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ede62e519837e489fea05e5f94247e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 67446103}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!1 &863084632
 GameObject:
   m_ObjectHideFlags: 0
@@ -9870,7 +9895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &870916131
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11564,6 +11589,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Potato
+  imageOfItem: {fileID: 0}
 --- !u!114 &1072444010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12613,8 +12639,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26805e104140d5342826c50f61dcd98e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1870590018}
-  listOfOrder: []
+  listOfOrder:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  listOfOrderImages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   resultingItem: {fileID: 0}
   numofOrdersCompleted: 0
   currentOrderIndex: 0
@@ -12622,25 +12656,27 @@ MonoBehaviour:
   numOfOrdersInLevel: 0
   maxOrderSize: 4
   totalNumofOrders: 0
-  numOfIngredientsAvailable: 0
+  numOfIngredientsAvailable: 5
   levelsNecessary: 5
-  craftingMan: {fileID: 576501842}
-  itemSprite1: {fileID: 1869776450}
-  itemSprite2: {fileID: 2074891292}
-  itemSprite3: {fileID: 678375341}
-  itemSprite4: {fileID: 735867853}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
+  itemDisplayedSprites:
+  - {fileID: 1869776450}
+  - {fileID: 2074891292}
+  - {fileID: 678375341}
+  - {fileID: 735867853}
   ordersToCompletePerLevel: 050000000a0000000f00000012000000190000001e000000230000003100000039000000440000004c000000c8000000fa0000002c01000090010000f4010000
   progressBar: {fileID: 1968711216}
   newLevelProgressed: {fileID: 804555368}
   ingredientsUnlockedAlert: {fileID: 576845193}
   helper: {fileID: 0}
-  timeManager: {fileID: 1708555524}
   penguinButton: {fileID: 366598015}
   messengerButton: {fileID: 842555942}
   dragonButton: {fileID: 426650065}
   timingButton: {fileID: 803200179}
   collectingButton: {fileID: 1718915783}
   penguinUnlocked: 1
+  messengerUnlocked: 0
+  dragonUnlocked: 0
   feedBackImages:
   - {fileID: 1019879846}
   - {fileID: 1354033153}
@@ -14279,7 +14315,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1297507630
 Transform:
   m_ObjectHideFlags: 0
@@ -15060,6 +15096,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: PumpkinPie
+  imageOfItem: {fileID: 0}
 --- !u!114 &1369089566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15490,6 +15527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Apple Pie
+  imageOfItem: {fileID: 0}
 --- !u!114 &1444640174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17201,6 +17239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Pinapple
+  imageOfItem: {fileID: 0}
 --- !u!114 &1565913289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17919,6 +17958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0ad020f52c24da48810ae441f158eb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
   sentences:
   - Hello welcome to the cooking game!
   - Your objective is to craft an order according to the required order you are to
@@ -17936,14 +17976,11 @@ MonoBehaviour:
   sentenceIndex: 0
   abilitySentenceIndex: 0
   typingSpeed: 0.02
-  tutorialManager: {fileID: 67446103}
-  gameManager: {fileID: 1870590018}
-  craftingManager: {fileID: 576501842}
   slotBGs:
-  - {fileID: 271574382}
-  - {fileID: 863084632}
-  - {fileID: 1598051618}
-  - {fileID: 2058442134}
+  - {fileID: 271574384}
+  - {fileID: 863084634}
+  - {fileID: 1598051620}
+  - {fileID: 2058442136}
   isForSummon: 0
   introTutorialCallOutNumber: 0
   pdCraftButton: {fileID: 581774106}
@@ -17964,7 +18001,7 @@ MonoBehaviour:
   visualCueNum: 0
   showIntroTutorialSpeechBubbleAtSentenceIndex: 0100000002000000030000000500000006000000
   progressiveDisclosureStep: 0
-  orderMan: {fileID: 1204447452}
+  highlightedSlotIndex_ProgressiveDisclosureTutorial: 0
 --- !u!1 &1612353339
 GameObject:
   m_ObjectHideFlags: 0
@@ -18608,8 +18645,7 @@ MonoBehaviour:
   - {fileID: 2111114061}
   - {fileID: 696050465}
   completedTutorials: []
-  craftingManager: {fileID: 576501842}
-  orderMan: {fileID: 1204447452}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   typingSpeed: 0.02
   pdTutorialPanelAbility: {fileID: 1218400192}
@@ -18669,6 +18705,7 @@ MonoBehaviour:
   penguinIngredientArrow: {fileID: 1239777192}
   craftingManager: {fileID: 576501842}
   orderMan: {fileID: 1204447452}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!1 &1692100065
 GameObject:
   m_ObjectHideFlags: 0
@@ -19044,11 +19081,9 @@ MonoBehaviour:
   powerUpTutorialPanelWallOfText: {fileID: 1498936235}
   newLevelFeedBack: {fileID: 804555368}
   quickTime: {fileID: 1700568666}
-  gameManager: {fileID: 1870590018}
-  tutorialManager: {fileID: 67446103}
-  orderManager: {fileID: 1204447452}
   mainGame: {fileID: 723197336}
   dataMiner: {fileID: 1545319385}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!1 &1718915783
 GameObject:
   m_ObjectHideFlags: 0
@@ -19196,7 +19231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ede62e519837e489fea05e5f94247e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 67446103}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!1 &1721466550
 GameObject:
   m_ObjectHideFlags: 0
@@ -19435,7 +19470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 088e1197ae8eb8347bb7f60cec963c07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1870590018}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
   numOrderDisplay: {fileID: 1322218445}
   progressBar: {fileID: 1968711216}
   numOrderDisplayCollectingGame: {fileID: 519631360}
@@ -20624,11 +20659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 242b8ff350b478c48984ce98de96f443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orderManager: {fileID: 1204447452}
-  craftingManager: {fileID: 576501842}
-  timeManager: {fileID: 1708555524}
   timeCompleted: 0
-  tutorialManager: {fileID: 67446103}
   pausePanel: {fileID: 1950801400}
   pauseButton: {fileID: 1112794862}
   continueButton: {fileID: 974667939}
@@ -20646,7 +20677,8 @@ MonoBehaviour:
   collectingGame: {fileID: 362793371}
   endGameScreen: {fileID: 514094310}
   mainGame: {fileID: 723197336}
-  progressType: 0
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
+  progressType: 1
   tutorialType: 0
 --- !u!1 &1879141746
 GameObject:
@@ -21917,11 +21949,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3813f5a25d440c44786087a4eb8fcbe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  craftingMan: {fileID: 576501842}
-  gameManager: {fileID: 1870590018}
-  abilityImage1: {fileID: 1018712185}
-  abilityImage2: {fileID: 206192547}
-  abilityImage3: {fileID: 646424498}
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
+  summonImage1: {fileID: 1018712185}
+  summonImage2: {fileID: 206192547}
+  summonImage3: {fileID: 646424498}
   newLevelAlert: {fileID: 804555368}
   powerUpTutorialPanel: {fileID: 1498936235}
   powerUps:
@@ -21930,14 +21961,18 @@ MonoBehaviour:
   - {fileID: 1351995473995497476}
   createdObject: {fileID: 0}
   coolDown1: 30
-  ability1: 49
+  summon1: 0
   coolDown2: 10
-  ability2: 50
+  summon2: 0
   coolDown3: 50
-  ability3: 51
+  summon3: 0
   miner: {fileID: 1545319385}
   mainGame: {fileID: 723197336}
-  abilityPDTutorialManager: {fileID: 1683268336}
+  firstTimeUsePenguin: 0
+  penguinItemSuccessfullyDropped: 0
+  penguinButton: {fileID: 366598015}
+  penguinImage: {fileID: 824715476}
+  penguinSlot: -1
 --- !u!114 &2018983628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22212,7 +22247,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2042749932
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22595,7 +22630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2086600148
 Transform:
   m_ObjectHideFlags: 0
@@ -23569,6 +23604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: PickledEggs
+  imageOfItem: {fileID: 0}
 --- !u!114 &1109342572880342087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23739,6 +23775,12 @@ PrefabInstance:
       propertyPath: pdManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1351995473881903078, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
+        type: 3}
+      propertyPath: managerHub
+      value: 
+      objectReference: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300,
+        type: 2}
     - target: {fileID: 1351995473881903078, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
         type: 3}
       propertyPath: orderManager
@@ -24038,6 +24080,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Pepper(red)
+  imageOfItem: {fileID: 0}
 --- !u!1001 &1715649774152768963
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24354,6 +24397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Pickle
+  imageOfItem: {fileID: 0}
 --- !u!224 &2119918606482472469
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24911,6 +24955,12 @@ PrefabInstance:
       propertyPath: craftMan
       value: 
       objectReference: {fileID: 576501842}
+    - target: {fileID: 2700505829289036284, guid: bc5be0c3fa7cd6e49b9f5b020b215151,
+        type: 3}
+      propertyPath: managerHub
+      value: 
+      objectReference: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300,
+        type: 2}
     - target: {fileID: 2700505829289036284, guid: bc5be0c3fa7cd6e49b9f5b020b215151,
         type: 3}
       propertyPath: abilityTutorialProgressiveDisclosureHandler
@@ -25745,6 +25795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Olive
+  imageOfItem: {fileID: 0}
 --- !u!114 &5294771336756522885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26753,6 +26804,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Pepper(green)
+  imageOfItem: {fileID: 0}
 --- !u!114 &7705927549501326992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26822,6 +26874,12 @@ PrefabInstance:
       propertyPath: pdManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8082193756501095763, guid: 58a43adc6a98deb4f8576438a9a18f1d,
+        type: 3}
+      propertyPath: managerHub
+      value: 
+      objectReference: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300,
+        type: 2}
     - target: {fileID: 8082193756501095763, guid: 58a43adc6a98deb4f8576438a9a18f1d,
         type: 3}
       propertyPath: orderManager

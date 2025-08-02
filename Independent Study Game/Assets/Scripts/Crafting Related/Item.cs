@@ -8,10 +8,14 @@ using UnityEngine.EventSystems;
 public class Item : MonoBehaviour, IPointerDownHandler 
 {
     public string itemName; //What the item is
+    public Image imageOfItem;
     Color defaultColor;
-    private void Start()
+
+    private void Awake()
     {
-        defaultColor = gameObject.GetComponent<Image>().color;
+        imageOfItem = gameObject.GetComponent<Image>();
+        defaultColor = imageOfItem.color;
+        
     }
 
     public void OnPointerDown(PointerEventData eventData)

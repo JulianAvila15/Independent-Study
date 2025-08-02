@@ -8,13 +8,13 @@ using System;
 
 public class IntroProgressiveDisclosureHandler : MonoBehaviour
 {
+ [SerializeField]   ManagerofManagers managerHub;
+
     public string[] sentences;
     public int sentenceIndex, abilitySentenceIndex;
     public float typingSpeed;
-    public TutorialManager tutorialManager;
-    public GameManager gameManager;
-    public CraftingManager craftingManager;
-    public GameObject[] slotBGs;
+ 
+    public Image[] slotBGs;
     public bool isForSummon;
     public int introTutorialCallOutNumber = 0;
     Color tutorialPanelColor;
@@ -24,8 +24,10 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
     static public bool introPDTutorialFinished = false;
     [SerializeField] private int[] showIntroTutorialSpeechBubbleAtSentenceIndex;
     public int progressiveDisclosureStep = 0;
+    public int highlightedSlotIndex_ProgressiveDisclosureTutorial = 0; //for the tutorial, it specifies the index of the ingredient in the order that needs to be satisfied 
+    Text callOutText;
 
-    public OrderManager orderMan;
+
 
     public enum PDStepsIntro
     {
@@ -34,29 +36,32 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
         ClickCraftButtonEvent = 6,
         DescribeFeedBack = 7
     }
+
+
     public static PDStepsIntro progressive_DisclosureSteps;
 
 
     private void Awake()
     {
-        orderMan = craftingManager.orderManager;
+
+        if (managerHub != null && managerHub.introPDManager == null)
+            managerHub.introPDManager = gameObject.GetComponent<IntroProgressiveDisclosureHandler>();
     }
 
     private void Start()
     {
-        if (!gameManager.inTestingMode)
+
+        if (!managerHub.gameManager.inTestingMode)
         {
-            if (tutorialManager.gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure)
+            if (managerHub.gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure)
             {
 
-                tutorialManager = tutorialManager.GetComponent<TutorialManager>();
-                tutorialManager.continueButton.gameObject.SetActive(false);
-
+                managerHub.tutorialManager.continueButton.gameObject.SetActive(false);
                 isForSummon = false;
                 StartCoroutine(Type());
             }
 
-            tutorialPanelColor = tutorialManager.tutorialPanel.GetComponent<Image>().color;
+            tutorialPanelColor = managerHub.tutorialManager.tutorialPanel.GetComponent<Image>().color;
         }
         else
             introPDTutorialFinished = true;
@@ -65,20 +70,20 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.inTestingMode && !introPDTutorialFinished) //if beginning tutorial is not completed yet
+        if (!managerHub.gameManager.inTestingMode && !introPDTutorialFinished) //if beginning tutorial is not completed yet
             HandlePDIntroSteps();
 
 
-        if (!craftingManager.craftButton.gameObject.activeInHierarchy)
-            craftingManager.craftButton.gameObject.SetActive(true);
+        if (!managerHub.craftingManager.craftButton.gameObject.activeInHierarchy)
+            managerHub.craftingManager.craftButton.gameObject.SetActive(true);
 
     }
 
     private void HandlePDIntroSteps()
     {
-        if (gameManager.craftingManager.highlightedSlotIndex_ProgressiveDisclosureTutorial <= CraftingManager.numberOfCraftingSlots && !tutorialManager.tutorialPanel.activeInHierarchy)//visual queues for progressive disclosure
+        if (highlightedSlotIndex_ProgressiveDisclosureTutorial <= managerHub.craftingManager.numberOfCraftingSlots && !managerHub.tutorialManager.tutorialPanel.activeInHierarchy)//visual queues for progressive disclosure
         {
-            visualCueNum = craftingManager.ingredientsList.IndexOf(gameManager.orderManager.listOfOrder[gameManager.craftingManager.highlightedSlotIndex_ProgressiveDisclosureTutorial]);
+            visualCueNum = managerHub.craftingManager.ingredientsList.IndexOf(managerHub.orderManager.listOfOrder[highlightedSlotIndex_ProgressiveDisclosureTutorial]);
             introPDVisualCues[visualCueNum].gameObject.SetActive(true);
         }
         else
@@ -86,29 +91,29 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
             HideAllVisualCue();
         }
 
-        if (progressiveDisclosureStep == (int)PDStepsIntro.DuringCraftEvent && !tutorialManager.tutorialPanel.activeInHierarchy)
+        if (progressiveDisclosureStep == (int)PDStepsIntro.DuringCraftEvent && !managerHub.tutorialManager.tutorialPanel.activeInHierarchy)
         {
-            slotBGs[craftingManager.highlightedSlotIndex_ProgressiveDisclosureTutorial].GetComponent<Image>().color = new Color(255, 255, 0);
+            slotBGs[highlightedSlotIndex_ProgressiveDisclosureTutorial].color = new Color(255, 255, 0);
         }
         else
         {
-            slotBGs[craftingManager.highlightedSlotIndex_ProgressiveDisclosureTutorial].GetComponent<Image>().color = new Color(255, 255, 255);
+            slotBGs[highlightedSlotIndex_ProgressiveDisclosureTutorial].color = new Color(255, 255, 255);
         }
 
         if (progressiveDisclosureStep == (int)PDStepsIntro.ClickCraftButtonEvent)
         {
-            tutorialManager.continueButton.gameObject.SetActive(false);
+          managerHub.tutorialManager.continueButton.gameObject.SetActive(false);
             pdCraftButton.SetActive(true);
 
-            tutorialManager.tutorialPanel.GetComponent<Image>().color = new Color(tutorialPanelColor.r, tutorialPanelColor.g, tutorialPanelColor.b, 0);
+           managerHub.tutorialManager.tutorialPanel.GetComponent<Image>().color = new Color(tutorialPanelColor.r, tutorialPanelColor.g, tutorialPanelColor.b, 0);
             introPDVisualCues[4].SetActive(true);
             introPDVisualCues[5].SetActive(true);
 
 
-            if (gameManager.orderManager.currentOrderIndex == 1)
+            if (managerHub.orderManager.currentOrderIndex == 1)
             {
                 pdCraftButton.SetActive(false);
-                tutorialManager.tutorialPanel.GetComponent<Image>().color = tutorialPanelColor;
+                managerHub.tutorialManager.tutorialPanel.GetComponent<Image>().color = tutorialPanelColor;
                 introPDVisualCues[4].SetActive(false);
                 introPDVisualCues[5].SetActive(false);
 
@@ -124,7 +129,7 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
 
 
     
-        while (!tutorialManager.tutorialPanel.activeInHierarchy && !introPDTutorialFinished)
+        while (!managerHub.tutorialManager.tutorialPanel.activeInHierarchy && !introPDTutorialFinished)
         {
             yield return null;
         }
@@ -144,7 +149,7 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
         }
 
         Debug.Log("before stopping coroutine");
-        if (!tutorialManager.tutorialPanel.activeInHierarchy && progressiveDisclosureStep != (int)PDStepsIntro.DescribeFeedBack&&progressiveDisclosureStep>1)
+        if (!managerHub.tutorialManager.tutorialPanel.activeInHierarchy && progressiveDisclosureStep != (int)PDStepsIntro.DescribeFeedBack&&progressiveDisclosureStep>1)
         {
             Debug.Log("stopping coroutine");
             StopCoroutine(Type());
@@ -157,14 +162,16 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
 
         if (progressiveDisclosureStep < (int)PDStepsIntro.ClickCraftButtonEvent || progressiveDisclosureStep == (int)PDStepsIntro.DescribeFeedBack)
         {
-            tutorialManager.continueButton.gameObject.SetActive(true);
+            managerHub.tutorialManager.continueButton.gameObject.SetActive(true);
         }
 
     }
 
     public void NextSentence()//would be parameterized to include the specific number of sentences per speech bubble
     {
-        tutorialManager.continueButton.gameObject.SetActive(false);
+      managerHub.tutorialManager.continueButton.gameObject.SetActive(false);
+
+        callOutText = introTutorialCallOuts[introTutorialCallOutNumber].GetComponentInChildren<Text>();
 
         if (!introPDTutorialFinished)//intro tutorial has not completed
         {
@@ -177,7 +184,7 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
 
                 if (progressiveDisclosureStep == (int)PDStepsIntro.BeginCraftEvent)
                 {
-                    tutorialManager.tutorialPanel.SetActive(false);
+                    managerHub.tutorialManager.tutorialPanel.SetActive(false);
                 }
                 introTutorialCallOutNumber++;
                 introTutorialCallOuts[introTutorialCallOutNumber].SetActive(true);
@@ -187,20 +194,34 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
             {
                 sentenceIndex++;
 
-                introTutorialCallOuts[introTutorialCallOutNumber].GetComponentInChildren<Text>().text = "";
+                callOutText.text  = "";
                 progressiveDisclosureStep++;
                 StartCoroutine(Type());
             }
             else
             {
-                introTutorialCallOuts[introTutorialCallOutNumber].GetComponentInChildren<Text>().text = "";//clear text
-                tutorialManager.tutorialPanel.gameObject.SetActive(false); //set tutorial panel unactive
+                callOutText.text = "";//clear text
+                managerHub.tutorialManager.tutorialPanel.gameObject.SetActive(false); //set tutorial panel unactive
                 introPDTutorialFinished = true;//tutorial has finished so inform the time manager
                 if (sentenceIndex < introTutorialCallOuts.Length)
                     sentenceIndex++;
                 HideAllVisualCue();
                 this.gameObject.SetActive(false);
             }
+        }
+    }
+
+    public void HighlightIngredientandCorrespondingSlot()
+    {
+        if (highlightedSlotIndex_ProgressiveDisclosureTutorial < managerHub.craftingManager.numberOfCraftingSlots - 1 && managerHub.introPDManager.IntroPDCraftEventOccuring())//Guide player to complete the order till complete
+        {
+            managerHub.introPDManager.introPDVisualCues[managerHub.introPDManager.visualCueNum].SetActive(false);
+            managerHub.introPDManager.slotBGs[highlightedSlotIndex_ProgressiveDisclosureTutorial].color = Color.white;//set color back to white
+            highlightedSlotIndex_ProgressiveDisclosureTutorial++;
+        }
+        else if (!introPDTutorialFinished) //order is complete 
+        {
+            managerHub.tutorialManager.tutorialPanel.SetActive(true);
         }
     }
 
@@ -212,6 +233,12 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
                 introPDVisualCues[i].SetActive(false);
         }
     }
+
+    public bool IntroPDCraftEventOccuring()
+    {
+        return progressiveDisclosureStep == (int)PDStepsIntro.DuringCraftEvent && managerHub.orderManager.listOfOrder[highlightedSlotIndex_ProgressiveDisclosureTutorial] == managerHub.craftingManager.currentItem;
+    }
+
 }
 
 

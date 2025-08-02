@@ -17,8 +17,9 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
     public Coroutine currentStepCoroutine;
    private AbilityTutorialStepData current_step;
     static public bool abilityTutorialTriggered = false;
-    public CraftingManager craftingManager;
-    public OrderManager orderMan;
+
+   [SerializeField] ManagerofManagers managerHub;
+
     Color transparentColor, defaultPanelColor;
     public Color currentColor;
 
@@ -38,6 +39,12 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
     public SummonPDTutorialHandler summonPDHandler;
 
 
+    private void Awake()
+    {
+        if (managerHub != null && managerHub.abilityPDManager == null)
+            managerHub.abilityPDManager = gameObject.GetComponent<AbilityTutorialProgressiveDisclosureHandler>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +56,9 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
         //set sub ability handlers
         miniGamePDHandler = gameObject.GetComponent<MiniGamePDHandler>();
         summonPDHandler = gameObject.GetComponent<SummonPDTutorialHandler>();
+
+      
+
 
     }
 
@@ -224,7 +234,8 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
             Helper helper = summonHandler.createdObject.GetComponent<Helper>();
           summonPDHandler.SetSummon(ref helper);
         }
-        
+
+
         AdvanceAbilityStep();
     }
 

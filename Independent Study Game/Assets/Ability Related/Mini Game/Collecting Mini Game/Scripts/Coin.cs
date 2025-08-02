@@ -5,7 +5,7 @@ using UnityEngine;
 public class Coin : MonoBehaviour
 {
     Transform transformCoin;
-    float movementSpeed = 3;
+  [SerializeField] private float movementSpeed = 3;
     public ParticleSystem badCollision, goodCollision;
     bool hasCollided = false; // Flag to track if collision has occurred
     bool pauseMovement=false;
@@ -13,13 +13,10 @@ public class Coin : MonoBehaviour
     private AbilityTutorialProgressiveDisclosureHandler abilityTutorialProgressiveDisclosureHandler;
     public bool canStartMoving = false, needToSlow = false;
     float slowSpeedByAmount = .5f;
-    
+  [SerializeField]  ManagerofManagers managerHub;
 
+ [SerializeField] private float pdTopPosition = 2f, groundPosition = .5f;
 
-    private void Awake()
-    {
-        abilityTutorialProgressiveDisclosureHandler = (AbilityTutorialProgressiveDisclosureHandler)FindObjectOfType(typeof(AbilityTutorialProgressiveDisclosureHandler));
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -36,46 +33,8 @@ public class Coin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (needToSlow)
-        {
-            if (movementSpeed > 0 && transformCoin.position.y <= 2f)
-            {
-                movementSpeed = slowSpeedByAmount;
-                highlight.SetActive(true);
-                tutorialArrowPD.SetActive(true);
-            }
-               
-        }
-
-        if((!pauseMovement|| transformCoin.position.y >= 2f)||!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
-            transformCoin.position -= new Vector3(0, movementSpeed * Time.deltaTime, 0);
-
-        if (!canStartMoving&& AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && transformCoin.position.y <= 2f && transformCoin.position.y >= .5f)
-        {
-            pauseMovement = true;
-            highlight.SetActive(true);
-            abilityTutorialProgressiveDisclosureHandler.miniGamePDHandler.coinHasSpawned = true;
-            tutorialArrowPD.SetActive(true);
-        }
-        else if(canStartMoving&&!needToSlow)
-        {
-            highlight.SetActive(false);
-            pauseMovement = false;
-        }
-
-        if (transformCoin.position.y <= .5f)
-        {
-            if (!hasCollided) // Check if collision hasn't occurred already
-            {
-                Instantiate(badCollision, transformCoin.position, Quaternion.identity);
-                CheckIfCanContinuePDTutorialAfterColliding();
-                Destroy(gameObject);
-            }
-        }
-
-        
-
+        if(!GameManager.pause)
+        HandleCoinMovement();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -83,9 +42,9 @@ public class Coin : MonoBehaviour
         if (!hasCollided) // Check if collision hasn't occurred already
         {
             Instantiate(goodCollision, transformCoin.position, Quaternion.identity);
-            CollectingGameManager.coinsCollected++;
+            managerHub.collectingGameManager.coinsCollected++;
             hasCollided = true; // Set the flag to true to prevent further collisions
-            TimeManager.ResetAFKTimer();
+            managerHub.timeManager.ResetAFKTimer();
 
             if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
             {
@@ -105,4 +64,62 @@ public class Coin : MonoBehaviour
             abilityTutorialProgressiveDisclosureHandler.miniGamePDHandler.CheckIfCanContinueAfterCollectingCoin();
     }
 
+    private void HandleCoinMovement()
+    {
+        if (needToSlow)
+        {
+            if (movementSpeed > 0 && transformCoin.position.y <= pdTopPosition)
+            {
+                movementSpeed = slowSpeedByAmount;
+                highlight.SetActive(true);
+                tutorialArrowPD.SetActive(true);
+            }
+               
+        }
+
+        if (ShouldCoinMove())
+        {
+            transformCoin.position -= new Vector3(0, movementSpeed * Time.deltaTime,0);
+        }
+        if (managerHub.abilityPDManager.miniGamePDHandler.NeedToStopCoinDuringTutorial() && ReachedPDTutorialPosition())
+        {
+            pauseMovement = true;
+            highlight.SetActive(true);
+            abilityTutorialProgressiveDisclosureHandler.miniGamePDHandler.coinHasSpawned = true;
+            tutorialArrowPD.SetActive(true);
+        }
+        else if(canStartMoving&&!needToSlow)
+        {
+            highlight.SetActive(false);
+            pauseMovement = false;
+        }
+
+        if (transformCoin.position.y <= groundPosition) //coin has hit ground
+        {
+            DestroyCoin();
+        }
+    }
+
+    private void DestroyCoin()
+    {
+        if (!hasCollided) // Check if collision hasn't occurred already
+        {
+            Instantiate(badCollision, transformCoin.position, Quaternion.identity);
+            CheckIfCanContinuePDTutorialAfterColliding();
+            Destroy(gameObject);
+        }
+    }
+
+    bool ShouldCoinMove()
+    {
+        return (!pauseMovement || transformCoin.position.y >= pdTopPosition) || !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered;
+    }
+
+    bool ReachedPDTutorialPosition()
+    {
+        return transformCoin.position.y <= pdTopPosition && transformCoin.position.y >= groundPosition;
+    }
+
+
+    
 }

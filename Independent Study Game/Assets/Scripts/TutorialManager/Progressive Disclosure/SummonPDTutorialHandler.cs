@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
@@ -31,6 +28,8 @@ public class SummonPDTutorialHandler : MonoBehaviour
 
     private Coroutine summonCoroutine;
 
+ [SerializeField]   ManagerofManagers managerHub;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,7 +55,7 @@ public class SummonPDTutorialHandler : MonoBehaviour
     //Summon pertinent step handling
     public void HighlightSlot()
     {
-        visualCueNum = craftingManager.ingredientsList.IndexOf(orderMan.listOfOrder[CraftingManager.penguinSlot]);
+        visualCueNum = craftingManager.ingredientsList.IndexOf(orderMan.listOfOrder[managerHub.summonManager.penguinSlot]);
 
 
         if (mainAbilityPDHandler.GetCurrentAbilityDataName() == "Penguin")
@@ -75,7 +74,7 @@ public class SummonPDTutorialHandler : MonoBehaviour
             switch (mainAbilityPDHandler.GetCurrentAbilityDataName())
             {
                 case "Penguin":
-                    craftingManager.penguinItemSuccessfullyDropped = false;
+                    managerHub.summonManager.penguinItemSuccessfullyDropped = false;
                     break;
                 case "Messenger":
                     currentSummon.selectedTile.SetActive(true);
@@ -127,7 +126,7 @@ public class SummonPDTutorialHandler : MonoBehaviour
     public void IngredientDropped()
     {
         HighlightSlot();
-       craftingManager.firstTimeUsePenguin = true;
+       managerHub.summonManager.firstTimeUsePenguin = true;
         craftingManager.nextButton.interactable = craftingManager.prevButton.interactable = false;
     }
 
@@ -187,5 +186,19 @@ public class SummonPDTutorialHandler : MonoBehaviour
             summonCoroutine = null;
         }
     }
-   
+
+    public bool SummonHasRechedDestinationDuringPDTutorialOnce()
+    {
+        return managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure ||!currentSummon.summonReachedPDtutorialOnce;
+    }
+
+
+    public void HandleSummonReachedDestinationForFirstTimeInPDTutorial()
+    {
+        if (managerHub.abilityPDManager.summonPDHandler.SummonHasRechedDestinationDuringPDTutorialOnce())
+        {
+           currentSummon.summonedReachedPDTutorialDestination = true;
+          currentSummon.summonReachedPDtutorialOnce = true;
+        }
+    }
 }

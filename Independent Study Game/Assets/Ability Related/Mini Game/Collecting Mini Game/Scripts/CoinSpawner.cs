@@ -15,8 +15,9 @@ public class CoinSpawner : MonoBehaviour
    public AbilityTutorialProgressiveDisclosureHandler abilityTutorialProgressiveDisclosureHandler;
 
     Vector3 coinSpawnPosition;
-    private Vector3 firstCoinSpawnPosition= new Vector3(-22.6000004f, 5.99856353f, -21.8999996f);
-    private Vector3 secondCoinSpawnPosition = new Vector3(-25.6000004f, 7, -21.8999996f);
+    private Vector3 pdFirstCoinSpawnPosition= new Vector3(-22.6000004f, 5.99856353f, -21.8999996f);
+    private Vector3 pdSecondCoinSpawnPosition = new Vector3(-25.6000004f, 7, -21.8999996f);
+    private Vector3 generalSpawnPosition;
     GameObject spawnedCoin;
     float scaleFactor = 0.4f; // Adjust this value as needed
    public CollectingGameManager collectingGameManager;
@@ -36,6 +37,10 @@ public class CoinSpawner : MonoBehaviour
         leftBoundTransform = leftBound.GetComponent<Transform>();
         rightBoundTransform = rightBound.GetComponent<Transform>();
         spawnPositionTransform = spawnArea.GetComponent<Transform>();
+
+
+        generalSpawnPosition = new Vector3(0, spawnPositionTransform.transform.position.y, spawnPositionTransform.transform.position.z);
+
     }
 
     // Update is called once per frame
@@ -50,24 +55,34 @@ public class CoinSpawner : MonoBehaviour
         startedSpawning = true;
     }
     
+    void StopSpawnCoin()
+    {
+        startedSpawning = false;
+
+        if (collectingGameManager.coinSpawnCoroutine != null)
+        {
+            StopCoroutine(collectingGameManager.coinSpawnCoroutine);
+            collectingGameManager.coinSpawnCoroutine = null;
+        }
+    }
+
   public  IEnumerator SpawnCoin()
     {
 
         if ((!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered||canStartSpawningInTutorial))
-        {
+        { 
 
-            Debug.Log("Trying to spawn coin");
-
-                while ((!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered&&CollectingGameManager.coinsProduced <= maxCoinsNormalMode)||(canStartSpawningInTutorial&& CollectingGameManager.coinsProduced < maxCoinsTutorialMode))
+                while (CanSpawnCoin())
                 {
 
-
-
-                if (!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || (abilityTutorialProgressiveDisclosureHandler.GetStepTutorialType() == TutorialStepType.collectingMiniGameStart))
-                    spawnPosition = new Vector3(Random.Range(leftBound.transform.position.x + spawnEdgeBuffer, rightBound.transform.position.x - spawnEdgeBuffer), spawnPositionTransform.transform.position.y, spawnPositionTransform.transform.position.z);
+                if (abilityTutorialProgressiveDisclosureHandler.miniGamePDHandler.InCollectingMiniGameTutorial())
+                {
+                    spawnPosition = generalSpawnPosition;
+                    spawnPosition.x = GetRandomCoinXSpawnPosition();
+                }
                 else
                 {
-                    spawnPosition = (CollectingGameManager.coinsProduced + 1 <= firstCoinIndexThreshold) ? firstCoinSpawnPosition : secondCoinSpawnPosition;
+                    spawnPosition = (collectingGameManager.coinsProduced + 1 <= firstCoinIndexThreshold) ? pdFirstCoinSpawnPosition : pdSecondCoinSpawnPosition;
                 }
 
                 coinSpawnPosition = spawnPosition;
@@ -76,7 +91,7 @@ public class CoinSpawner : MonoBehaviour
                 {
                     spawnedCoin = Instantiate(coin, coinSpawnPosition, Quaternion.identity);
                     spawnedCoin.transform.localScale = Vector3.one * scaleFactor;
-                    CollectingGameManager.coinsProduced++;
+                    collectingGameManager.coinsProduced++;
 
                 }
               
@@ -97,4 +112,13 @@ public class CoinSpawner : MonoBehaviour
     }
 
 
+    bool CanSpawnCoin()
+    {
+        return (!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && collectingGameManager.coinsProduced <= maxCoinsNormalMode) || (canStartSpawningInTutorial && collectingGameManager.coinsProduced < maxCoinsTutorialMode);
+    }
+
+    float GetRandomCoinXSpawnPosition()
+    {
+        return Random.Range(leftBound.transform.position.x + spawnEdgeBuffer, rightBound.transform.position.x - spawnEdgeBuffer);
+    }
 }

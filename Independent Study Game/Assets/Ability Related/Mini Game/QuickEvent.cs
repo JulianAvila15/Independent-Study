@@ -81,7 +81,7 @@ public class QuickEvent : MonoBehaviour
     {
             pressedTiming = true;
         if(!isCoolDownTiming)
-        DataMiner.abilityandEventCount[3]++;
+        DataMiner.summonandEventCount[3]++;
     }
 
     private void QuickEventCollecting()
@@ -119,7 +119,7 @@ public class QuickEvent : MonoBehaviour
         {
             pressedCollecting = true;
             if (!isCoolDownCollecting)
-                DataMiner.abilityandEventCount[4]++;
+                DataMiner.summonandEventCount[4]++;
         }
     }
 }

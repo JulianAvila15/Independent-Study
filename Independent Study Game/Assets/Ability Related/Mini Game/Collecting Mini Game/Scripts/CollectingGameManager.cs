@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CollectingGameManager : MonoBehaviour
 {
-   public static int coinsCollected=0;
-    public static int coinsProduced = 0;
+   public int coinsCollected=0;
+    public int coinsProduced = 0;
     public GameObject collectingGame,mainGame;
-    public CraftingManager craftingManager;
+ [SerializeField]   ManagerofManagers managerHub;
     public Slider progressBar;
     int slotIndex;
     int firstSlot = 0, secondSlot = 1;
@@ -19,7 +19,8 @@ public class CollectingGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (managerHub != null)
+            managerHub.collectingGameManager = gameObject.GetComponent <CollectingGameManager>() ;
     }
 
     // Update is called once per frame
@@ -31,40 +32,51 @@ public class CollectingGameManager : MonoBehaviour
             progressBar.value = coinsCollected;
         }
 
+        if(CanEndCollectingMiniGame())
+        HandleEndOfCollectingGame();
+                
+            
+        
+    }
 
-        if ((!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && coinsProduced >= 11) || coinsProduced >= 12)
-        {
+    void HandleEndOfCollectingGame()
+    {
+       
             collectingGame.SetActive(false);
             mainGame.SetActive(true);
 
             if (coinSpawnCoroutine != null)
                 StopCoroutine(coinSpawnCoroutine);
 
-            Debug.Log("Trying to disable mini game");
             if (coinsCollected >= 10) //Max Score
             {
                 for (int slot = 0; slot < 2; slot++)
                 {
-                    craftingManager.CreateSlot(slot);
+                    managerHub.craftingManager.FillInSlot(slot,true);
                 }
 
             }
             else if (coinsCollected >= 5) //Benchmark Score
             {
-                slotIndex = (craftingManager.finalOrderList[firstSlot] == null || craftingManager.finalOrderList[firstSlot] != craftingManager.orderManager.listOfOrder[0]) ? firstSlot : secondSlot;
-                craftingManager.CreateSlot(slotIndex);
+                slotIndex = (DetermineToFillFirstSlot()) ? firstSlot : secondSlot;
+                managerHub.craftingManager.FillInSlot(slotIndex,true);
             }
 
             if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
                 abilityTutorialPDHandler.AdvanceAbilityStep();
 
             coinsCollected = coinsProduced = 0;
-        }
-                
-
-                
-            
         
+    }
+
+    bool CanEndCollectingMiniGame()
+    {
+        return ((!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered && coinsProduced >= 11) || coinsProduced >= 12);
+    }
+
+    bool DetermineToFillFirstSlot()
+    {
+        return managerHub.craftingManager.finalOrderList[firstSlot] == null || managerHub.craftingManager.finalOrderList[firstSlot] != managerHub.orderManager.listOfOrder[firstSlot];
     }
 
     private void OnDisable()

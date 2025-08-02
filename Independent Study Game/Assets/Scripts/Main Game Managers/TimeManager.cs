@@ -15,19 +15,24 @@ public class TimeManager : MonoBehaviour
    [SerializeField] private GameObject quickTime;
 
     static bool  showAFKWarning=true;
-    public GameManager gameManager;
-    public TutorialManager tutorialManager;
-    public OrderManager orderManager;
     public GameObject mainGame;
     public DataMiner dataMiner;
     float minutes;
     float seconds;
     string timeDisplay;
 
+   [SerializeField] ManagerofManagers managerHub;
+
+    private void Awake()
+    {
+        if (managerHub != null && managerHub.timeManager == null)
+            managerHub.timeManager = gameObject.GetComponent<TimeManager>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+   
     }
 
    public string DisplayTime(float timeToDisplay)
@@ -70,7 +75,7 @@ public class TimeManager : MonoBehaviour
                 afkTimer -= Time.deltaTime;
         }
         else if (timeRemaining <= 0)
-            gameManager.timeCompleted = true;
+            managerHub.gameManager.timeCompleted = true;
 
         if (afkTimer <= 0)
         {
@@ -100,7 +105,7 @@ public class TimeManager : MonoBehaviour
             powerUpTimeIndex++;
     }
 
-    public static void ResetAFKTimer()
+    public void ResetAFKTimer()
     {
         afkTimer = 15f;
     }
@@ -112,27 +117,27 @@ public class TimeManager : MonoBehaviour
 
     bool TutorialPanelsAreActive()
     {
-        return tutorialPanel.activeInHierarchy || !powerUpTutorialPanelWallOfText.activeInHierarchy;
+        return tutorialPanel.activeInHierarchy || powerUpTutorialPanelWallOfText.activeInHierarchy;
     }
 
     bool CanDecrementOverallGameTimer()
     {
-        return (timeRemaining > 0 && (!ImportantPaneAreActive() && !QuickTime.quickTimeEnabled && !newLevelFeedBack.activeInHierarchy && !TutorialPanelsAreActive() && (!(gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure) || IntroProgressiveDisclosureHandler.introPDTutorialFinished && !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)));//returns true if power up panel is not on or if the game mode is anything other than PD or intro pd or ability pd are not happening and there is still time remaining
+        return (timeRemaining > 0 && (!ImportantPaneAreActive() && !QuickTime.quickTimeEnabled && !newLevelFeedBack.activeInHierarchy && !TutorialPanelsAreActive() && (!(managerHub.gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure) || IntroProgressiveDisclosureHandler.introPDTutorialFinished && !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)));//returns true if power up panel is not on or if the game mode is anything other than PD or intro pd or ability pd are not happening and there is still time remaining
     }
 
     bool CanDisplayTime()
     {
-        return pausePanel.activeInHierarchy && (gameManager.tutorialType == GameManager.TutorialType.noTutorial || (gameManager.tutorialType == GameManager.TutorialType.wallOfText && !TutorialPanelsAreActive()) || (IntroProgressiveDisclosureHandler.introPDTutorialFinished && !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered));
+        return pausePanel.activeInHierarchy && (managerHub.gameManager.tutorialType == GameManager.TutorialType.noTutorial || (managerHub.gameManager.tutorialType == GameManager.TutorialType.wallOfText && !TutorialPanelsAreActive()) || (IntroProgressiveDisclosureHandler.introPDTutorialFinished && !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered));
     }
 
     bool PDIntroTutorialIsHappening()
     {
-        return gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure && !IntroProgressiveDisclosureHandler.introPDTutorialFinished && (!WorkIDPanel.activeInHierarchy && !pausePanel.activeInHierarchy);
+        return managerHub.gameManager.tutorialType == GameManager.TutorialType.progressiveDisclosure && !IntroProgressiveDisclosureHandler.introPDTutorialFinished && (!WorkIDPanel.activeInHierarchy && !pausePanel.activeInHierarchy);
     }
 
     bool WallOfTextIntroTutorialIsHappening()
     {
-        return (gameManager.tutorialType == GameManager.TutorialType.wallOfText && tutorialManager.tutorialPanel.activeInHierarchy);
+        return (managerHub.gameManager.tutorialType == GameManager.TutorialType.wallOfText && managerHub.tutorialManager.tutorialPanel.activeInHierarchy);
     }
 
     bool AbilityTutorialIsHappening()
