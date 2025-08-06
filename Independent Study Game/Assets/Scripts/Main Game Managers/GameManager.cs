@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     public Image pausePanel;
     public Button pauseButton,continueButton;
     public Canvas mainCanvas,workIDCanvas,bgCanvas;
-    public GameObject inputText,placeHolder,validatorText, errorMessageText;
+    public GameObject workerIDInputField, placeHolder, validatorText, errorMessageText;
+   [SerializeField] private Text workerIDText;
     string workerID;
     public GameObject errorMessagePanel;
     public DataMiner dataMiner;
@@ -23,6 +24,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject collectingGame, endGameScreen, mainGame;
 
   [SerializeField]  ManagerofManagers managerHub;
+
+    [SerializeField] int minimumLevelsToBeatGame = 5;
 
     public enum ProgressFeedbackType
     {
@@ -59,7 +62,6 @@ public class GameManager : MonoBehaviour
         StartorStopGame(false);
         managerHub.timeManager.enabled = true;
         errorMessagePanel.SetActive(false);
-
    
 
         switch (tutorialType)
@@ -105,12 +107,6 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P) && workIDCanvas.gameObject.activeInHierarchy == false) //Alternative way instead of using 
             Pause();
 
-
-        if (Input.GetKeyDown(KeyCode.KeypadEnter)) //Alternative way instead of using button
-        {
-            EnterWorkID();
-        }
-
         if (pausePanel.gameObject.activeInHierarchy || managerHub.orderManager.newLevelProgressed.activeInHierarchy || managerHub.tutorialManager.tutorialPanel.activeInHierarchy || managerHub.tutorialManager.tutorialPowerUp.activeInHierarchy)
         {
             pauseButton.gameObject.SetActive(false);
@@ -120,7 +116,7 @@ public class GameManager : MonoBehaviour
             pauseButton.gameObject.SetActive(true);
         }
 
-        if (timeCompleted && managerHub.orderManager.currLevel >= 5)
+        if (timeCompleted && managerHub.orderManager.currLevel >= minimumLevelsToBeatGame)
             EndGame();
     }
 
@@ -166,18 +162,25 @@ public class GameManager : MonoBehaviour
     {
         placeHolder.GetComponent<Text>().text="";
     }
+
+
     public void EnterWorkID()
-    {
-        if (inputText.GetComponent<Text>().text == "" || inputText.GetComponent<Text>().text[0] == ' '|| inputText.GetComponent<Text>().text[0] == '\n'  || inputText.GetComponent<Text>().text[0] == '\t')
+    { 
+        if (CanEnterWorkID())
         {
-           validatorText.gameObject.SetActive(true);
+
+            workerID = workerIDText.text;
+            DataMiner.workerID = workerID;
+            StartorStopGame(true);
+           
+         
         }
         else
         {
-            workerID = inputText.GetComponent<Text>().text;
-            DataMiner.workerID = workerID;
-            StartorStopGame(true);
+            validatorText.gameObject.SetActive(true);
         }
+
+
     }
 
     private void StartorStopGame(bool trueOrFalse)
@@ -214,9 +217,11 @@ public class GameManager : MonoBehaviour
                 mainGame.SetActive(true);
             }
 
-            if (managerHub.timeManager.GetTutorialTimeIntro() > 0)
-                managerHub.timeManager.SetTimeCompletedGame();
+     
+
             endGameScreen.SetActive(true);
+
+        DataMiner.tutorialTimeIntro = managerHub.timeManager.GetTutorialTimeIntro();
 
         managerHub.timeManager.SetAbilityTutorialTime();
 
@@ -224,7 +229,14 @@ public class GameManager : MonoBehaviour
             //log the data once done
             dataMiner.logdata();
         }
+
+
+    bool CanEnterWorkID()
+    {
+        return workerIDText!=null && workerIDText.text.Length > 0&& !(workerIDText.text == "" || workerIDText.text[0] == ' ' || workerIDText.text[0] == '\n' || workerIDText.text[0] == '\t');
     }
 
 
-    
+}
+
+

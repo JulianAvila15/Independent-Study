@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,8 @@ public class CraftingManager : MonoBehaviour
    [SerializeField] private int selectedSlotIndexDivisor = 4;
   [SerializeField]  int prevIngredientSetCount = -1, prevSetIndex = -1;
 
+
+
     public static bool canClickCraftButton;
 
   public int nearestSlotIndex = -1;
@@ -50,8 +53,6 @@ public class CraftingManager : MonoBehaviour
 
     private void Awake()
     {
-        if (managerHub == null)
-            Debug.Break();
 
         if (managerHub != null && managerHub.craftingManager == null)
             managerHub.craftingManager = gameObject.GetComponent<CraftingManager>();
@@ -81,14 +82,16 @@ public class CraftingManager : MonoBehaviour
     public void OnMouseDownItem(Item item)
     {
         currentItem = item;
+
         if (CanPickUpItem())
         {
 
             customCursor.gameObject.SetActive(true);
-            customCursor.sprite = item.GetComponent<Image>().sprite;
+            customCursor.sprite = item.imageOfItem.sprite;
             DataMiner.numOfIngredientClicks++;
         }
-
+        else
+            currentItem = null;
     }
 
     private void UpdateIngredientPanel()
@@ -168,17 +171,23 @@ public class CraftingManager : MonoBehaviour
 
             if (ItemClosestToCraftingSlot(ref finalDist ,ref sufficentDist))//item is close enough to the crafting slot (if the progressive disclosure version is still in tutorial mode make sure they can only put the right ingredients in the right slot)
             {
-                if (managerHub.summonManager.CanSafetlyDropItemWhenPenguinIsActive(nearestSlotIndex)&&nearestSlotIndex==managerHub.summonManager.penguinSlot)
-                    managerHub.summonManager.FillPenguinSlot();
-                else
+                if (!managerHub.summonManager.PenguinInCurrentUse()||managerHub.summonManager.CanSafetlyDropItemWhenPenguinActiveAndItemDragged(nearestSlotIndex))
+                {
                     FillInSlot(nearestSlotIndex,false);
+
+                    if(managerHub.summonManager.CorrectIngredientInPenguinSlot())
+                    managerHub.summonManager.FillPenguinSlot();
+                }
+
+                    
                
 
             }
             else //if item is clicked
             {
-                if (managerHub.summonManager.CanSafetlyDropItemWhenPenguinIsActive())//if the penguin has shown the ingredient and the ingredient clicked on is the correct one
+                if (managerHub.summonManager.CanSafetlyDropItemWhenPenguinPenguinActiveAndItemClicked())//if the penguin has shown the ingredient and the ingredient clicked on is the correct one
                 {
+                    FillInSlot(managerHub.summonManager.penguinSlot, true);
                     managerHub.summonManager.FillPenguinSlot();
                 }
                 else if (GetAvailableSlot() > -1 && !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered )//fill next available slot if there is one
@@ -191,7 +200,7 @@ public class CraftingManager : MonoBehaviour
                         selectedSlotIndex++;
 
 
-                    if (craftingSlots[selectedSlotIndex % selectedSlotIndexDivisor].item == null || craftingSlots[selectedSlotIndex % selectedSlotIndexDivisor].item != currentItem)
+                    if (currentItem.itemName != managerHub.craftingManager.finalOrderList[selectedSlotIndex%selectedSlotIndexDivisor].itemName)
                     {
                         FillInSlot(selectedSlotIndex % selectedSlotIndexDivisor,false);
 
@@ -226,6 +235,8 @@ public class CraftingManager : MonoBehaviour
         imageCraftingSlots[selectedSlotIndex].sprite = itemToFillSlot.imageOfItem.sprite;
        craftingSlots[selectedSlotIndex].item = itemToFillSlot;
         finalOrderList[selectedSlotIndex] = itemToFillSlot;
+
+
     }
 
 
@@ -295,7 +306,12 @@ public class CraftingManager : MonoBehaviour
 
     public bool NeedToFillSlot(int selectedSlotIndex)
     {
-     return   (craftingSlots[selectedSlotIndex].item == null) || (craftingSlots[selectedSlotIndex].item.itemName != managerHub.orderManager.listOfOrder[selectedSlotIndex].itemName);
+     return   (craftingSlots[selectedSlotIndex].item == null) || IsIncorrectIngredientInSlot(selectedSlotIndex);
+    }
+
+    public bool IsIncorrectIngredientInSlot(int selectedSlotIndex)
+    {
+        return craftingSlots[selectedSlotIndex].item!=null && (craftingSlots[selectedSlotIndex].item.itemName != managerHub.orderManager.listOfOrder[selectedSlotIndex].itemName);
     }
 
     bool CanRemoveIngredientFromSlot()
@@ -305,12 +321,12 @@ public class CraftingManager : MonoBehaviour
 
     bool CanDropItem()
     {
-        return (currentItem != null && (managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || managerHub.introPDManager.IntroPDCraftEventOccuring() || managerHub.tutorialManager.NoPDTutorialOccuring() || managerHub.summonManager.PenguinInCurrentUse()));
+        return (currentItem != null && (managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || managerHub.introPDManager.IntroPDCraftEventOccuring() || managerHub.tutorialManager.NoPDTutorialOccuring() || managerHub.summonManager.CorrectIngredientInPenguinSlot()));
     }
 
     bool CanPickUpItem()
     {
-        return (managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || managerHub.introPDManager.IntroPDCraftEventOccuring() || managerHub.tutorialManager.NoPDTutorialOccuring() || managerHub.summonManager.PenguinInCurrentUse());
+        return (!managerHub.orderManager.newLevelProgressed.activeInHierarchy&&(managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || managerHub.introPDManager.IntroPDCraftEventOccuring() || managerHub.tutorialManager.NoPDTutorialOccuring() || (!managerHub.abilityPDManager.CurrentStepIsNull()&&managerHub.abilityPDManager.GetStepTutorialType()==TutorialStepType.IngredientDropped&&currentItem==managerHub.orderManager.listOfOrder[managerHub.summonManager.penguinSlot]==currentItem)));
     }
 
     bool ItemClosestToCraftingSlot(ref float finalDist, ref float sufficentDist)

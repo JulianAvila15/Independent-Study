@@ -133,11 +133,6 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
         {
             yield return null;
         }
-        //if (timeout <= 0f)
-        //{
-        //    debug.logwarning("tutorial panel never activated within timeout.");
-        //    yield break;
-        //}
 
         introTutorialCallOuts[introTutorialCallOutNumber].GetComponentInChildren<Text>().text = "";
 
@@ -148,10 +143,8 @@ public class IntroProgressiveDisclosureHandler : MonoBehaviour
             yield return new WaitForSeconds(typingSpeed);
         }
 
-        Debug.Log("before stopping coroutine");
         if (!managerHub.tutorialManager.tutorialPanel.activeInHierarchy && progressiveDisclosureStep != (int)PDStepsIntro.DescribeFeedBack&&progressiveDisclosureStep>1)
         {
-            Debug.Log("stopping coroutine");
             StopCoroutine(Type());
         }
 

@@ -16,6 +16,7 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
 
     public Coroutine currentStepCoroutine;
    private AbilityTutorialStepData current_step;
+   public AbilityTutorialData next_Step;
     static public bool abilityTutorialTriggered = false;
 
    [SerializeField] ManagerofManagers managerHub;
@@ -75,7 +76,6 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
         var candidate = abilityTutorialDataArray[currentAbilityIndex];
         if (candidate.steps.Count > 0)
         {
-            Debug.Log(abilityTutorialTriggered);
             TriggerAbilityTutorial(candidate);
         }
     }
@@ -114,7 +114,6 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
     {
  
         current_step = currentAbilityTutorialData.steps[currentAbilityTutorialStepIndex]; 
-
         if (current_step.canClickThroughPanel)
         {
             pdTutorialPanelAbility.GetComponent<Image>().raycastTarget = false;
@@ -126,8 +125,8 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
             currentColor = pdTutorialPanelAbility.GetComponent<Image>().color = defaultPanelColor;
         }
 
-        if (currentAbilityTutorialData.isSummon&&currentAbilityTutorialData.summon!=null)
-            summonPDHandler.StartSummonPDTutorialStep(ref currentAbilityTutorialData.summon, currentAbilityTutorialData.slotIndex, current_step.needSummon);
+        if (currentAbilityTutorialData.isSummon)
+            summonPDHandler.StartSummonPDTutorialStep(ref currentAbilityTutorialData.summon, currentAbilityTutorialData.slotIndex, current_step.needSummon,current_step.showPenguinLock);
         else
             miniGamePDHandler.MiniGameStartStep(current_step, currentAbilityTutorialData.abilityName);
 
@@ -389,21 +388,18 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
                 case TutorialStepType.collectingMiniGameStart:
                     miniGamePDHandler.EndCollectingMiniGame();
                     break;
+                case TutorialStepType.demonstrateCollecting:
+                    miniGamePDHandler.EndDemonstratingCollecting();
+                    break;
                 case TutorialStepType.demonstrateLosing:
                     miniGamePDHandler.EndDemonstratingLosing();
                     break;
             }
 
-            if (currentAbilityTutorialData.summon != null)
-            {
-
-                if (current_step.summonCanContinue)
-                {
-                    currentAbilityTutorialData.summon.summonedCanContinuePDTutorial = true;
-                }
-                else if (currentAbilityTutorialData.summon != null)
-                    currentAbilityTutorialData.summon.summonedCanContinuePDTutorial = false;
-            }
+            if(currentAbilityTutorialData.isSummon)
+            summonPDHandler.EndSummonStep(current_step, currentAbilityTutorialData);
+            else
+            miniGamePDHandler.EndMiniGameStep();
 
             if (currentStepCoroutine != null)
             {
@@ -411,12 +407,7 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
                 StopCoroutine(currentStepCoroutine);
                 currentStepCoroutine = null;
             }
-            if (miniGamePDHandler.fadeToBlackCoroutine != null)
-            {
-                StopCoroutine(miniGamePDHandler.fadeToBlackCoroutine);
-                miniGamePDHandler.fadeToBlackCoroutine = null;
-            }
-
+           
         }
     }
 
@@ -451,6 +442,11 @@ public class AbilityTutorialProgressiveDisclosureHandler : MonoBehaviour
     bool HasCompletedTutorial(string abilityName)
     {
         return completedTutorials.Contains(abilityName);
+    }
+
+   public bool CurrentStepIsNull()
+    {
+        return current_step == null;
     }
 
     void MarkTutorialComplete(string abilityName)

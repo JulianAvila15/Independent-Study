@@ -10,7 +10,7 @@ public class Coin : MonoBehaviour
     bool hasCollided = false; // Flag to track if collision has occurred
     bool pauseMovement=false;
    [SerializeField]  GameObject highlight,tutorialArrowPD;
-    private AbilityTutorialProgressiveDisclosureHandler abilityTutorialProgressiveDisclosureHandler;
+  [SerializeField]  private AbilityTutorialProgressiveDisclosureHandler abilityTutorialProgressiveDisclosureHandler;
     public bool canStartMoving = false, needToSlow = false;
     float slowSpeedByAmount = .5f;
   [SerializeField]  ManagerofManagers managerHub;
@@ -22,6 +22,8 @@ public class Coin : MonoBehaviour
     void Start()
     {
         transformCoin = gameObject.GetComponent<Transform>();
+
+        abilityTutorialProgressiveDisclosureHandler = managerHub.abilityPDManager;
 
         if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
         {

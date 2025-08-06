@@ -10,7 +10,7 @@ public class CollectingGameManager : MonoBehaviour
  [SerializeField]   ManagerofManagers managerHub;
     public Slider progressBar;
     int slotIndex;
-    int firstSlot = 0, secondSlot = 1;
+  const  int firstSlot = 0, secondSlot = 1;
 
     public AbilityTutorialProgressiveDisclosureHandler abilityTutorialPDHandler;
    public Coroutine coinSpawnCoroutine;
@@ -41,32 +41,41 @@ public class CollectingGameManager : MonoBehaviour
 
     void HandleEndOfCollectingGame()
     {
-       
-            collectingGame.SetActive(false);
-            mainGame.SetActive(true);
 
-            if (coinSpawnCoroutine != null)
-                StopCoroutine(coinSpawnCoroutine);
+        collectingGame.SetActive(false);
+        mainGame.SetActive(true);
 
-            if (coinsCollected >= 10) //Max Score
+        if (coinSpawnCoroutine != null)
+            StopCoroutine(coinSpawnCoroutine);
+
+        if (coinsCollected >= 10) //Max Score
+        {
+            for (int slot = 0; slot < 2; slot++)
             {
-                for (int slot = 0; slot < 2; slot++)
-                {
-                    managerHub.craftingManager.FillInSlot(slot,true);
-                }
+                managerHub.craftingManager.FillInSlot(slot, true);
+
+                if (slot == secondSlot && managerHub.summonManager.PenguinInCurrentUse())
+                    managerHub.summonManager.FillPenguinSlot();
 
             }
-            else if (coinsCollected >= 5) //Benchmark Score
-            {
-                slotIndex = (DetermineToFillFirstSlot()) ? firstSlot : secondSlot;
-                managerHub.craftingManager.FillInSlot(slotIndex,true);
-            }
 
-            if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
-                abilityTutorialPDHandler.AdvanceAbilityStep();
+        }
+        else if (coinsCollected >= 5)
+        {
+                slotIndex = (DetermineToFillFirstSlot()&& !managerHub.summonManager.messengerIsOut) ? firstSlot : secondSlot;
 
-            coinsCollected = coinsProduced = 0;
-        
+
+                managerHub.craftingManager.FillInSlot(slotIndex, true);
+
+            if (slotIndex == secondSlot && managerHub.summonManager.PenguinInCurrentUse())
+                managerHub.summonManager.FillPenguinSlot();
+        }
+
+
+        if (AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
+            abilityTutorialPDHandler.AdvanceAbilityStep();
+
+        coinsCollected = coinsProduced = 0;
     }
 
     bool CanEndCollectingMiniGame()

@@ -45,10 +45,9 @@ public class TimeManager : MonoBehaviour
 
         timeDisplay = string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
 
-        if (mainGame.activeInHierarchy)
-        {
+
             timeRemainingText.text = "Time Remaining: \n"+string.Format("{0:00} minutes : {1:00} seconds", minutes, seconds);
-        }
+       
 
         return timeDisplay;
     }
@@ -156,11 +155,6 @@ public class TimeManager : MonoBehaviour
         DataMiner.timeSpentOnEachLevel[currLevel] = DisplayTime(timeRemaining);
     }
 
-    public void SetTimeCompletedGame()
-    {
-        DataMiner.totalTime = DisplayTime(timeRemaining);
-    }
-
     public void SetAbilityTutorialTime()
     {
         for (int i = 0; i < powerUpTutorialTime.Length; i++)
@@ -171,9 +165,9 @@ public class TimeManager : MonoBehaviour
 
     }
 
-    public float GetTutorialTimeIntro()
+    public string GetTutorialTimeIntro()
     {
-        return tutorialTimeIntro;
+        return DisplayTime(tutorialTimeIntro);
     }
 
 }

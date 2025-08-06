@@ -46,13 +46,12 @@ public class SummonManager : MonoBehaviour
     static public bool canClickCraftButton = false;
     public bool firstTimeUsePenguin = false;
     public bool penguinItemSuccessfullyDropped = false;
-    Color penguinButtonColor;
-    public GameObject penguinButton;
-    public Image penguinImage;
     private int penguinProspectiveSlotNum = 1, messengerProspectiveSlotNum = 0;
     public int penguinSlot = -1;//Gets the slot the penguin has chosen to color blue
+    public Color iceBlue = new Color(0.69f, 1f, 1f);
+    [SerializeField] public Sprite iceLockImg;
+    public bool messengerIsOut=false;
 
-    
     public enum summonIndex
     {
         messenger = 0,
@@ -81,7 +80,7 @@ public class SummonManager : MonoBehaviour
 
         dragonPosition = new Vector3(12.13f, -2f, 0);
 
-        penguinButtonColor = penguinButton.GetComponent<Image>().color;
+        
     }
 
     // Update is called once per frame
@@ -100,14 +99,20 @@ public class SummonManager : MonoBehaviour
         if (pressed3)
             TriggerAbility(ref pressed3, ref isCoolDown3, "Dragon", summon3, 2, dragonPosition, ref summonImage3, coolDown3);
 
-        if (managerHub.orderManager.penguinUnlocked && (!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || managerHub.abilityPDManager.GetStepTutorialType() != TutorialStepType.FlashButton))
+        if (PenguinInCurrentUse())
         {
+            if (managerHub.craftingManager.IsIncorrectIngredientInSlot(penguinSlot))
+                managerHub.craftingManager.imageCraftingSlots[penguinSlot].color = Color.yellow;
 
-            HandleSummonButtonEnableorDisable();
+            if ((managerHub.craftingManager.currentItem != null && !CurrentItemIsPenguinItem()))
+                managerHub.craftingManager.imageCraftingSlots[penguinSlot].sprite = iceLockImg;
+            else if (Helper.penguinHasShownIngredient)
+            {
+                managerHub.craftingManager.imageCraftingSlots[penguinSlot].color = Color.cyan;
+                managerHub.craftingManager.imageCraftingSlots[penguinSlot].sprite = null;
+            }
         }
-
-        if (penguinSlot > 0 && managerHub.craftingManager.craftingSlots[penguinSlot].item != null && managerHub.craftingManager.finalOrderList[penguinSlot].itemName != managerHub.orderManager.listOfOrder[penguinSlot].itemName)
-           managerHub.craftingManager.craftingSlots[penguinSlot].GetComponent<Image>().color = Color.yellow;
+        
 
     }
 
@@ -198,21 +203,7 @@ public class SummonManager : MonoBehaviour
 
     }
 
-    private void HandleSummonButtonEnableorDisable()
-    {
 
-        if (managerHub.craftingManager.finalOrderList[penguinProspectiveSlotNum] != null && managerHub.orderManager.listOfOrder[penguinProspectiveSlotNum].itemName == managerHub.craftingManager.finalOrderList[penguinProspectiveSlotNum].itemName)
-        {
-            penguinButton.GetComponent<Button>().interactable = false;
-            penguinImage.color = penguinButton.GetComponent<Image>().color = penguinButton.GetComponent<Button>().colors.disabledColor;
-        }
-        else
-        {
-            penguinButton.GetComponent<Button>().interactable = true;
-            penguinButton.GetComponent<Image>().color = penguinButtonColor;
-            penguinImage.color = Color.white;
-        }
-    }
 
 
     public void FillPenguinSlot()
@@ -221,8 +212,6 @@ public class SummonManager : MonoBehaviour
 
         if (mainGame.activeInHierarchy == true)//if the penguin has shown the ingredient
         {
-            if(penguinProspectiveSlotNum>0)
-            managerHub.craftingManager.FillInSlot(penguinProspectiveSlotNum,false);
 
 
             if (managerHub.craftingManager.finalOrderList[penguinSlot] != null && managerHub.orderManager.listOfOrder[penguinSlot].itemName == managerHub.craftingManager.finalOrderList[penguinSlot].itemName)//if the correct item is in the in the penguin slot
@@ -232,8 +221,6 @@ public class SummonManager : MonoBehaviour
                 managerHub.orderManager.listOfOrder[penguinSlot].imageOfItem.color = managerHub.craftingManager.imageCraftingSlots[penguinSlot].color = Color.white;
                 Helper.penguinHasShownIngredient = false;
 
-
-                if (!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
                     penguinSlot = -1;
 
                 if (firstTimeUsePenguin)
@@ -245,30 +232,40 @@ public class SummonManager : MonoBehaviour
         }
     }
 
-    public bool PenguinInCurrentUse()
+   public void SetPenguinSlot()
+    {
+        penguinSlot = penguinProspectiveSlotNum;
+    }
+
+    public bool CorrectIngredientInPenguinSlot()
     {
         return penguinSlot > 0 && managerHub.orderManager.listOfOrder[penguinSlot] == managerHub.craftingManager.currentItem;
     }
 
-  public bool CanSafetlyDropItemWhenPenguinIsActive(int neareSlotSelectedIndex=1)
+    public bool PenguinInCurrentUse()
     {
-        return (PenguinInCurrentUse() && (CanSafetlyDropItemWhenPenguinActiveAndItemDragged(neareSlotSelectedIndex) || CanSafetlyDropItemWhenPenguinPenguinActiveAndItemClicked()));
+        return penguinSlot > 0;
     }
-
  
 
-     bool CanSafetlyDropItemWhenPenguinActiveAndItemDragged(int nearestSlotIndex)
+   public  bool CanSafetlyDropItemWhenPenguinActiveAndItemDragged(int nearestSlotIndex)
     {
         return (((managerHub.craftingManager.craftingSlots[nearestSlotIndex] != managerHub.craftingManager.craftingSlots[penguinSlot] && managerHub.craftingManager.currentItem.itemName != managerHub.orderManager.listOfOrder[penguinSlot].itemName)
             || (managerHub.craftingManager.currentItem == managerHub.orderManager.listOfOrder[penguinSlot])));
     }
 
 
-     bool CanSafetlyDropItemWhenPenguinPenguinActiveAndItemClicked()
+   public  bool CanSafetlyDropItemWhenPenguinPenguinActiveAndItemClicked()
     {
-      return  (Helper.penguinHasShownIngredient && managerHub.craftingManager.currentItem != null && managerHub.craftingManager.craftingSlots[managerHub.summonManager.penguinSlot].item == null && managerHub.orderManager.listOfOrder[managerHub.summonManager.penguinSlot].itemName == managerHub.craftingManager.currentItem.itemName);
+      return  (PenguinInCurrentUse() && managerHub.craftingManager.currentItem != null && managerHub.craftingManager.craftingSlots[managerHub.summonManager.penguinSlot].item == null && managerHub.orderManager.listOfOrder[managerHub.summonManager.penguinSlot].itemName == managerHub.craftingManager.currentItem.itemName);
     }
     
+    public bool CurrentItemIsPenguinItem()
+    {
+
+        return managerHub.craftingManager.currentItem == managerHub.orderManager.listOfOrder[penguinSlot];
+
+    }
 
     private bool CheckIfCanBePressed(string summonName)
     {

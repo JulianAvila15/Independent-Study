@@ -27,7 +27,7 @@ public class DataMiner : MonoBehaviour
     public static int[] summonandEventCount = { 0, 0, 0, 0, 0 };//Keep track of ability/summon/Event count
     public static string progressFeedbackMode, tutorialMode;//Keep track of game modes
     public static int numOfIngredientClicks=0,numOfCrafts=0,numOfSuccessfulCrafts=0,numOfFailedCrafts=0,currLevel=0;//game variables
-    public static string totalTime="-1", tutorialTimeIntro="00 minutes:00 seconds";//Keep track of timing
+    public static string tutorialTimeIntro="00 minutes:00 seconds";//Keep track of timing
     public static string[] powerUpTutorialTime = { "00 minutes:00 seconds", "00 minutes:00 seconds", "00 minutes:00 seconds", "00 minutes:00 seconds", "00 minutes:00 seconds" };
     public static string[] timeSpentOnEachLevel = { "-1", "-1", "-1", "-1", "-1" , "-1" , "-1" , "-1" , "-1" , "-1" };
 

@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     private Vector3 m_Velocity = Vector3.zero;
    private Vector3 playerTargetVelocity = new Vector2(0,0);
 
-    private float move = 0;
+    public float move = 0;
     private bool jump = false;
 
     [Header("Events")]
@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private AbilityTutorialProgressiveDisclosureHandler abilityPDHandler;
 
-    public Vector3 playerSpawnPosition = new Vector3(-24.61891f, 4.247815f, -23.54283f);
+    public Vector3 playerSpawnPosition = new Vector3(-24.61891f, 4.247815f, -23.54283f), playerPositionDuringDemo;
 
     [SerializeField] private GameObject triggerWarp;
 
@@ -46,7 +46,10 @@ public class Player : MonoBehaviour
     public bool canMoveRight=true, canMoveLeft=true;
 
  [SerializeField]   ManagerofManagers managerHub;
- 
+
+    float rawInput;
+
+
     private void Awake()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -61,18 +64,19 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        playerPositionDuringDemo = new Vector3(-23.6000004f, playerSpawnPosition.y,playerSpawnPosition.z);
     }
 
     private void Update()
     {
-        float rawInput = Input.GetAxisRaw("Horizontal");
+         rawInput = Input.GetAxisRaw("Horizontal");
 
-        if ((rawInput > 0 && canMoveRight) || (rawInput < 0 && canMoveLeft))
+        if (PlayerCanMove()&&((rawInput > 0 && canMoveRight) || (rawInput < 0 && canMoveLeft)))
             move = rawInput;
         else
             move = 0;
 
-        m_Animator.SetBool("Moving", rawInput != 0);
+        m_Animator.SetBool("Moving", move != 0);
 
         // Have to make sure it's not already playing the animation, otherwise the trigger will be set twice
         //Fetch the current Animation clip information for the base layer
@@ -130,6 +134,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
         Move(move, jump);
     }
 
@@ -145,12 +150,11 @@ public class Player : MonoBehaviour
             {
                 // Move the character by finding the target velocity
 
+
                 playerTargetVelocity.x = move * m_Speed;
                 playerTargetVelocity.y = m_Rigidbody2D.velocity.y;
 
                 // And then smoothing it out and applying it to the character
-
-
                 m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, playerTargetVelocity, ref m_Velocity, m_MovementSmoothing);
 
                 // If the input is moving the player right and the player is facing left...
@@ -199,9 +203,11 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        gameObject.transform.position = playerSpawnPosition;
+        if (CanSpawnPlayerNormally())
+            gameObject.transform.position = playerSpawnPosition;
+        else
+            gameObject.transform.position = playerPositionDuringDemo;
     }
-
 
     bool PlayerCanJump()
     {
@@ -211,5 +217,10 @@ public class Player : MonoBehaviour
     bool PlayerCanMove()
     {
         return managerHub.gameManager.tutorialType != GameManager.TutorialType.progressiveDisclosure || abilityPDHandler.completedTutorials.Contains("Collecting") || playerCanMoveInPDTutorial;
+    }
+
+    bool CanSpawnPlayerNormally()
+    {
+        return (!AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || managerHub.abilityPDManager.GetStepTutorialType() != TutorialStepType.demonstrateLosing);
     }
 }

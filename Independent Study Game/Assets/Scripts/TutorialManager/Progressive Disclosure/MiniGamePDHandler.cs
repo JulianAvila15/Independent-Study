@@ -22,9 +22,9 @@ public class MiniGamePDHandler : MonoBehaviour
     [SerializeField] private GameObject timingPauseButton;
     Coroutine coinSpawnCoroutine;
     public Coroutine fadeToBlackCoroutine;
-    Vector3 playerPositionDuringDemo;
-    public GameObject triggerWarp;
 
+    public GameObject triggerWarp;
+    Player playerScript;
 
     AbilityTutorialProgressiveDisclosureHandler mainAbilityPDHandler;
 
@@ -67,17 +67,17 @@ public class MiniGamePDHandler : MonoBehaviour
 
     //Collecting mini game handler stuff
     public void DemonstrateLosing()
-    {
-
-        int bringUpPlayerBy = 6;
+    { 
 
         if (fadeToBlackCoroutine == null)
             fadeToBlackCoroutine = StartCoroutine(FadeToBlackCoroutine());
 
-        playerPositionDuringDemo = new Vector3(-23.6000004f, playerObj.transform.position.y + bringUpPlayerBy, playerObj.transform.position.z);
+      
         triggerWarp.SetActive(true);
-        triggerWarp.transform.position = playerPositionDuringDemo;
-        playerObj.transform.position = playerPositionDuringDemo;
+        triggerWarp.gameObject.GetComponent<Transform>().position = playerObj.playerPositionDuringDemo;
+        playerObj.gameObject.SetActive(true);
+
+       
     }
 
     public void SpawnCoin()
@@ -89,7 +89,6 @@ public class MiniGamePDHandler : MonoBehaviour
 
     public void CheckIfCanContinueAfterCollectingCoin()
     {
-
         if (playerObj.m_Grounded)
         {
             if (waitForLanding != null)
@@ -258,9 +257,22 @@ public class MiniGamePDHandler : MonoBehaviour
     internal void EndDemonstratingLosing()
     {
         triggerWarp.transform.position = playerObj.playerSpawnPosition;
+        triggerWarp.SetActive(false);
+
     }
 
-  public  bool NeedToStopCoinDuringTutorial()
+
+    public void EndMiniGameStep()
+    {
+        if (fadeToBlackCoroutine != null)
+        {
+            StopCoroutine(fadeToBlackCoroutine);
+            fadeToBlackCoroutine = null;
+        }
+
+    }
+
+    public  bool NeedToStopCoinDuringTutorial()
     {
         return !coinCanMove && AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered;
     }
@@ -268,5 +280,10 @@ public class MiniGamePDHandler : MonoBehaviour
     public bool InCollectingMiniGameTutorial()
     {
         return !AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered || (mainAbilityPDHandler.GetStepTutorialType() == TutorialStepType.collectingMiniGameStart);
+    }
+
+    public void EndDemonstratingCollecting()
+    {
+        playerObj.gameObject.SetActive(false);
     }
 }

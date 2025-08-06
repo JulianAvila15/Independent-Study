@@ -31,7 +31,7 @@ public class OrderManager : MonoBehaviour
 
     public GameObject penguinButton, messengerButton, dragonButton, timingButton, collectingButton;
 
-    public bool penguinUnlocked=false,messengerUnlocked=false,dragonUnlocked=false;
+    public bool penguinUnlocked=false,messengerUnlocked=false,dragonUnlocked=false,collectingUnlocked=false,timingUnlocked=false;
 
     public Image[] feedBackImages;
 
@@ -133,15 +133,19 @@ public class OrderManager : MonoBehaviour
                     break;
                 case 4:
                     collectingButton.SetActive(true);
+                    collectingUnlocked = true;
                     break;
                 case 6:
                     messengerButton.SetActive(true);
+                    messengerUnlocked = true;
                     break;
                 case 8:
                     dragonButton.SetActive(true);
+                    dragonUnlocked = true;
                     break;
                 case 10:
                     timingButton.SetActive(true);
+                    timingUnlocked = true;
                     break;
                 default:
                     break;

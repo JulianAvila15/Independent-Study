@@ -30,6 +30,8 @@ public class SummonPDTutorialHandler : MonoBehaviour
 
  [SerializeField]   ManagerofManagers managerHub;
 
+    [SerializeField] Image penguinLockImage;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,11 +45,19 @@ public class SummonPDTutorialHandler : MonoBehaviour
         
     }
 
-    public void StartSummonPDTutorialStep(ref Helper currendPDDataSummon, int designatedSlotIndexNum, bool needSummon)
+    public void StartSummonPDTutorialStep(ref Helper currendPDDataSummon, int designatedSlotIndexNum, bool needSummon, bool showPenguinLock)
     {
+       if(currentSummon==null && needSummon)
         currentSummon = currendPDDataSummon;
+
         slotIndex = designatedSlotIndexNum;
+
         summonCurrentlyInUse = needSummon;
+
+        if (showPenguinLock)
+            penguinLockImage.gameObject.SetActive(true);
+        else
+            penguinLockImage.gameObject.SetActive(false);
 
     }
 
@@ -75,6 +85,8 @@ public class SummonPDTutorialHandler : MonoBehaviour
             {
                 case "Penguin":
                     managerHub.summonManager.penguinItemSuccessfullyDropped = false;
+                    if (managerHub.summonManager.penguinSlot < 0)
+                        managerHub.summonManager.SetPenguinSlot();
                     break;
                 case "Messenger":
                     currentSummon.selectedTile.SetActive(true);
@@ -125,9 +137,16 @@ public class SummonPDTutorialHandler : MonoBehaviour
 
     public void IngredientDropped()
     {
+        
         HighlightSlot();
-       managerHub.summonManager.firstTimeUsePenguin = true;
-        craftingManager.nextButton.interactable = craftingManager.prevButton.interactable = false;
+
+        if (mainAbilityPDHandler.GetCurrentAbilityDataName() == "Penguin")
+        {
+            managerHub.summonManager.firstTimeUsePenguin = true;
+            craftingManager.nextButton.interactable = craftingManager.prevButton.interactable = false;
+                       
+        }
+
     }
 
     public void SummonAppeared(Helper summon)
@@ -199,6 +218,23 @@ public class SummonPDTutorialHandler : MonoBehaviour
         {
            currentSummon.summonedReachedPDTutorialDestination = true;
           currentSummon.summonReachedPDtutorialOnce = true;
+        }
+    }
+
+    public void EndSummonStep(AbilityTutorialStepData current_step, AbilityTutorialData currentAbilityTutorialData)
+    {
+
+        if (currentSummon != null)
+        {
+
+            if (current_step.summonCanContinue)
+            {
+                currentAbilityTutorialData.summon.summonedCanContinuePDTutorial = true;
+            }
+            else if (currentAbilityTutorialData.summon != null)
+                currentAbilityTutorialData.summon.summonedCanContinuePDTutorial = false;
+
+
         }
     }
 }

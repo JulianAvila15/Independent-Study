@@ -12,7 +12,7 @@ public class Helper : MonoBehaviour
     public Transform helperTransform;
     Animator helperAnimator;
     float movementSpeed= 1f;
-    public GameObject[] slotTriggers,slots;
+    public GameObject[] slotTriggers;
     private Vector3[] slotPositions;
     public GameObject dragonTrigger;
     public GameObject selectedTile,selectedTile2;
@@ -33,7 +33,6 @@ public class Helper : MonoBehaviour
 
     public static bool penguinHasShownIngredient = false;
     public bool hasShot = false;
-  private static  Color iceBlue = new Color(0.69f, 1f, 1f);
   [SerializeField]  private float penguinDistanceFromTilePosition = 10;
 
     public bool summonedReachedPDTutorialDestination=false;
@@ -44,7 +43,7 @@ public class Helper : MonoBehaviour
 
     double fireBallOffSet = 233.85001;
 
-    public object HandleSummonReachedDestinationForFirstTimeInPDTutorial { get; private set; }
+    [SerializeField] float dragonAnimationTime=.5f, messengerAnimationTime=.8f;
 
 
 
@@ -66,6 +65,8 @@ public class Helper : MonoBehaviour
                 
                     tilePosition = selectedTile.GetComponent<Transform>();
                     selectedTile.SetActive(true);
+
+                managerHub.summonManager.messengerIsOut = true;
             }
             else
             {
@@ -243,7 +244,6 @@ public class Helper : MonoBehaviour
                 }
                 managerHub.craftingManager.setsOfIngredients[managerHub.craftingManager.setIndex].SetActive(true);
 
-                managerHub.craftingManager.imageCraftingSlots[slotIndex].color = Color.cyan;
                 penguinHasShownIngredient = true;
                 managerHub.orderManager.listOfOrder[slotIndex].imageOfItem.color = Color.cyan;
             }
@@ -269,7 +269,13 @@ public class Helper : MonoBehaviour
             if(AbilityTutorialProgressiveDisclosureHandler.abilityTutorialTriggered)
          managerHub.abilityPDManager.summonPDHandler.HandleSummonReachedDestinationForFirstTimeInPDTutorial();
 
+
+            if(managerHub.craftingManager.NeedToFillSlot((int)SummonManager.summonIndex.messenger))
             StartCoroutine(SummonPutItemInSlot());
+            else
+            {
+                selectedTile.SetActive(false);
+            }
 
         }
         else if (helperTransform.position.x < tilePosition.position.x)
@@ -289,7 +295,7 @@ public class Helper : MonoBehaviour
         if (gameObject.tag == "Messenger")
         {
             helperAnimator.SetBool("AtSlot", true);
-            yield return new WaitForSeconds(.8f);
+            yield return new WaitForSeconds(messengerAnimationTime);
                 managerHub.craftingManager.FillInSlot(slotIndex,true);
             helperAnimator.SetBool("AtSlot", false);
             selectedTile.SetActive(false);
@@ -297,10 +303,10 @@ public class Helper : MonoBehaviour
 
         if (gameObject.tag == "Dragon")
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(dragonAnimationTime);
             helperAnimator.SetBool("Fire", true);
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(dragonAnimationTime);
             helperAnimator.SetBool("Fire", false);
 
             dragonTrigger.SetActive(false);
@@ -311,10 +317,20 @@ public class Helper : MonoBehaviour
     {
         CraftingManager.helperIsActive = false;
 
-        if(gameObject.tag=="Penguin")
-            managerHub.summonManager.penguinItemSuccessfullyDropped = false;
-        if(gameObject.tag=="Dragon")
-            hasShot = false;
+        switch (gameObject.tag)
+        {
+            case "Penguin":
+                managerHub.summonManager.penguinItemSuccessfullyDropped = false;
+                break;
+            case "Messenger":
+                managerHub.summonManager.messengerIsOut = false;
+                break;
+            case "Dragon":
+                hasShot = false;
+                break;
+        }
+        
+
     }
 
     int ReturnPenguinSetIndex()

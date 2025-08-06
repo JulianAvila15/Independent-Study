@@ -50,6 +50,7 @@ public class AbilityTutorialStepData
 
     public TutorialStepType stepType;//define the step type
     public GameObject callOut;//define the callout to display the sentence
+  
 
     [TextArea]
     public string sentence; // Only used for ShowText
@@ -60,6 +61,7 @@ public class AbilityTutorialStepData
 
     public bool summonCanContinue;
     public bool needSummon;
+    public bool showPenguinLock;
 
     public bool canClickThroughPanel=false;
     public bool turnOnCoolDown = false;

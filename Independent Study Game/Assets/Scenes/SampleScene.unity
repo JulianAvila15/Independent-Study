@@ -916,7 +916,7 @@ MonoBehaviour:
   - {fileID: 824715476}
   - {fileID: 176467004}
   - {fileID: 486343289}
-  - {fileID: 185327863}
+  - {fileID: 928792040}
   - {fileID: 214375067}
   wallofTextBG: {fileID: 21300000, guid: cb88257fdc4fc9b4baed399e0a7d3cbd, type: 3}
   craftButton: {fileID: 1305244432}
@@ -1736,7 +1736,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &152793939
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2217,81 +2217,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityTutorialPDHandler: {fileID: 1683268336}
---- !u!1 &185327861
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 185327862}
-  - component: {fileID: 185327864}
-  - component: {fileID: 185327863}
-  m_Layer: 5
-  m_Name: TimingDisplay
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &185327862
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185327861}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.9989822, y: 1.7593712, z: 1.93003}
-  m_Children: []
-  m_Father: {fileID: 803200180}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1464.8827, y: 229.04813}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &185327863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185327861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: caf2f7a0183b06646ba9fcae60eafec9, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &185327864
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185327861}
-  m_CullTransparentMesh: 1
 --- !u!1001 &198881177
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2834,7 +2759,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &240303050
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3398,6 +3323,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4843915422938211014, guid: 3b3d55cc30644644bb5d0a39295f90e6,
         type: 3}
+      propertyPath: m_Name
+      value: Please Enter Work ID Text
+      objectReference: {fileID: 0}
+    - target: {fileID: 4843915422938211014, guid: 3b3d55cc30644644bb5d0a39295f90e6,
+        type: 3}
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
@@ -3447,6 +3377,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 12800000, guid: 997a43b767814dd0a7642ec9b78cba41,
         type: 3}
+    - target: {fileID: 4843915423779355288, guid: 3b3d55cc30644644bb5d0a39295f90e6,
+        type: 3}
+      propertyPath: m_Name
+      value: Work ID Input Text
+      objectReference: {fileID: 0}
     - target: {fileID: 4843915423779355288, guid: 3b3d55cc30644644bb5d0a39295f90e6,
         type: 3}
       propertyPath: m_Layer
@@ -4174,6 +4109,7 @@ GameObject:
   - component: {fileID: 366598018}
   - component: {fileID: 366598019}
   - component: {fileID: 366598020}
+  - component: {fileID: 366598021}
   m_Layer: 5
   m_Name: PenguinPowerUp
   m_TagString: Untagged
@@ -4308,6 +4244,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ede62e519837e489fea05e5f94247e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
+--- !u!114 &366598021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366598015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 732b923c04bda254189720c150beb725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityButton: {fileID: 366598018}
+  abilityButtonImage: {fileID: 0}
+  abilityImage: {fileID: 824715476}
+  abilitySlotNum: 01000000
   managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!114 &379198100 stripped
 MonoBehaviour:
@@ -4729,6 +4682,7 @@ GameObject:
   - component: {fileID: 426650069}
   - component: {fileID: 426650068}
   - component: {fileID: 426650070}
+  - component: {fileID: 426650071}
   m_Layer: 5
   m_Name: DragonPowerUp
   m_TagString: Untagged
@@ -4863,6 +4817,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ede62e519837e489fea05e5f94247e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
+--- !u!114 &426650071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 426650065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 732b923c04bda254189720c150beb725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityButton: {fileID: 426650067}
+  abilityButtonImage: {fileID: 0}
+  abilityImage: {fileID: 486343289}
+  abilitySlotNum: 0200000003000000
   managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!850595691 &436100542
 LightingSettings:
@@ -6082,7 +6053,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &544462339
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7056,12 +7027,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 597645474}
   m_CullTransparentMesh: 1
---- !u!1 &606034908 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4843915423779355288, guid: 3b3d55cc30644644bb5d0a39295f90e6,
+--- !u!114 &606034910 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4843915423779355294, guid: 3b3d55cc30644644bb5d0a39295f90e6,
     type: 3}
   m_PrefabInstance: {fileID: 284455393}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &620756378
 GameObject:
   m_ObjectHideFlags: 0
@@ -7842,6 +7819,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -7858,6 +7836,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -7874,6 +7853,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -7890,6 +7870,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -7906,6 +7887,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 1
@@ -7922,6 +7904,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -7938,6 +7921,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 1
@@ -7954,6 +7938,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -7970,6 +7955,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 1
@@ -7986,6 +7972,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8002,6 +7989,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8018,6 +8006,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8034,6 +8023,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 1
@@ -8050,6 +8040,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8064,8 +8055,9 @@ MonoBehaviour:
     sentence: You will lose the coin if it drops to the ground.
     targetObject: {fileID: 1718915783}
     clicked: 0
-    summonCanContinue: 1
+    summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8082,6 +8074,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8099,6 +8092,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8115,6 +8109,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 1
@@ -8131,6 +8126,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8149,6 +8145,25 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
+    canClickThroughPanel: 0
+    turnOnCoolDown: 0
+    playerCanMove: 0
+    playerCanJump: 0
+    canStartSpawningCoin: 0
+    coinCanStartMoving: 0
+    coinMoveSlowly: 0
+    coinsToSpawnBeforeNextStep: 12
+    showStopButton: 0
+  - stepType: 1
+    callOut: {fileID: 1213114302}
+    sentence: The collecting mini game button will be disabled when the correct ingredients
+      are in the first and second slots.
+    targetObject: {fileID: 1718915783}
+    clicked: 0
+    summonCanContinue: 0
+    needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8165,6 +8180,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 1
     playerCanMove: 0
@@ -8608,6 +8624,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8624,6 +8641,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8640,6 +8658,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8656,6 +8675,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8673,6 +8693,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8690,6 +8711,25 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
+    canClickThroughPanel: 0
+    turnOnCoolDown: 0
+    playerCanMove: 0
+    playerCanJump: 0
+    canStartSpawningCoin: 0
+    coinCanStartMoving: 0
+    coinMoveSlowly: 0
+    coinsToSpawnBeforeNextStep: 0
+    showStopButton: 0
+  - stepType: 1
+    callOut: {fileID: 1700917000}
+    sentence: ' Dragon button will be disabled when the correct ingredients are in
+      the third and last slots.'
+    targetObject: {fileID: 426650065}
+    clicked: 0
+    summonCanContinue: 0
+    needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -8706,6 +8746,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 1
     playerCanMove: 0
@@ -9037,6 +9078,7 @@ GameObject:
   - component: {fileID: 803200183}
   - component: {fileID: 803200182}
   - component: {fileID: 803200181}
+  - component: {fileID: 803200185}
   m_Layer: 5
   m_Name: TimingMiniGameButton
   m_TagString: Untagged
@@ -9061,7 +9103,7 @@ RectTransform:
   - {fileID: 1331467462}
   - {fileID: 544462339}
   - {fileID: 152793939}
-  - {fileID: 185327862}
+  - {fileID: 928792039}
   m_Father: {fileID: 220589741}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9177,6 +9219,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 803200179}
   m_CullTransparentMesh: 1
+--- !u!114 &803200185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803200179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 732b923c04bda254189720c150beb725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityButton: {fileID: 803200183}
+  abilityButtonImage: {fileID: 0}
+  abilityImage: {fileID: 928792040}
+  abilitySlotNum: 0200000003000000
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!1 &804051428
 GameObject:
   m_ObjectHideFlags: 0
@@ -9609,6 +9668,7 @@ GameObject:
   - component: {fileID: 842555946}
   - component: {fileID: 842555945}
   - component: {fileID: 842555947}
+  - component: {fileID: 842555948}
   m_Layer: 5
   m_Name: MessengerPowerUp
   m_TagString: Untagged
@@ -9743,6 +9803,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ede62e519837e489fea05e5f94247e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
+--- !u!114 &842555948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842555942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 732b923c04bda254189720c150beb725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityButton: {fileID: 842555944}
+  abilityButtonImage: {fileID: 0}
+  abilityImage: {fileID: 176467004}
+  abilitySlotNum: 00000000
   managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!1 &863084632
 GameObject:
@@ -10134,8 +10211,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.14, y: 12.6}
-  m_SizeDelta: {x: 208.12, y: 65.3001}
+  m_AnchoredPosition: {x: 6.4, y: 26.1}
+  m_SizeDelta: {x: 325.6427, y: 84.5941}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &895730088
 MonoBehaviour:
@@ -10170,7 +10247,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: You have unlocked the ability to collect coins to fill slots!
+  m_Text: The collecting mini game button will be disabled when the correct ingredients
+    are in the third and last slots.
 --- !u!222 &895730089
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10295,6 +10373,81 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &928792038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 928792039}
+  - component: {fileID: 928792041}
+  - component: {fileID: 928792040}
+  m_Layer: 5
+  m_Name: ClockImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &928792039
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928792038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 1, z: 0}
+  m_Children: []
+  m_Father: {fileID: 803200180}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &928792040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928792038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: b247da08e2a6a2a4ab299e8fb89e2430, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &928792041
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928792038}
+  m_CullTransparentMesh: 1
 --- !u!1 &957025592
 GameObject:
   m_ObjectHideFlags: 0
@@ -11370,7 +11523,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1068874298
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12675,8 +12828,10 @@ MonoBehaviour:
   timingButton: {fileID: 803200179}
   collectingButton: {fileID: 1718915783}
   penguinUnlocked: 1
-  messengerUnlocked: 0
-  dragonUnlocked: 0
+  messengerUnlocked: 1
+  dragonUnlocked: 1
+  collectingUnlocked: 0
+  timingUnlocked: 0
   feedBackImages:
   - {fileID: 1019879846}
   - {fileID: 1354033153}
@@ -12795,8 +12950,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 273, y: -105.5}
-  m_SizeDelta: {x: 333.3927, y: 213.653}
+  m_AnchoredPosition: {x: 206.01897, y: -120.24686}
+  m_SizeDelta: {x: 492.006, y: 224.3088}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213114304
 MonoBehaviour:
@@ -13452,6 +13607,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13468,6 +13624,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13484,6 +13641,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13500,6 +13658,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13517,6 +13676,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13534,6 +13694,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13550,6 +13711,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13566,24 +13728,8 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 1
-    turnOnCoolDown: 0
-    playerCanMove: 0
-    playerCanJump: 0
-    canStartSpawningCoin: 0
-    coinCanStartMoving: 0
-    coinMoveSlowly: 0
-    coinsToSpawnBeforeNextStep: 0
-    showStopButton: 0
-  - stepType: 1
-    callOut: {fileID: 1500242813}
-    sentence: Penguin button will be disabled when the correct ingredient is the
-      second slot.
-    targetObject: {fileID: 366598015}
-    clicked: 0
-    summonCanContinue: 0
-    needSummon: 1
-    canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
     playerCanJump: 0
@@ -13600,6 +13746,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13616,6 +13763,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13632,6 +13780,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 1
     playerCanMove: 0
@@ -13648,6 +13797,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13665,6 +13815,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -13681,7 +13832,44 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
+    turnOnCoolDown: 0
+    playerCanMove: 0
+    playerCanJump: 0
+    canStartSpawningCoin: 0
+    coinCanStartMoving: 0
+    coinMoveSlowly: 0
+    coinsToSpawnBeforeNextStep: 0
+    showStopButton: 0
+  - stepType: 1
+    callOut: {fileID: 1500242813}
+    sentence: Penguin button will be disabled when the correct ingredient is the
+      second slot.
+    targetObject: {fileID: 366598015}
+    clicked: 0
+    summonCanContinue: 0
+    needSummon: 0
+    showPenguinLock: 0
+    canClickThroughPanel: 0
+    turnOnCoolDown: 0
+    playerCanMove: 0
+    playerCanJump: 0
+    canStartSpawningCoin: 0
+    coinCanStartMoving: 0
+    coinMoveSlowly: 0
+    coinsToSpawnBeforeNextStep: 0
+    showStopButton: 0
+  - stepType: 1
+    callOut: {fileID: 1975838505}
+    sentence: A blue lock will appear to prevent the wrong ingredient from getting
+      into the second slot
+    targetObject: {fileID: 366598015}
+    clicked: 0
+    summonCanContinue: 1
+    needSummon: 0
+    showPenguinLock: 1
+    canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
     playerCanJump: 0
@@ -13697,6 +13885,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 1
     playerCanMove: 0
@@ -14791,7 +14980,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1331467462
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15333,6 +15522,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434727002}
   m_CullTransparentMesh: 1
+--- !u!1 &1436158550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1436158551}
+  - component: {fileID: 1436158553}
+  - component: {fileID: 1436158552}
+  m_Layer: 8
+  m_Name: Icy Lock Tutorial Image BG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1436158551
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436158550}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1559399559}
+  m_Father: {fileID: 1782888072}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -238.12, y: -96.7}
+  m_SizeDelta: {x: 55, y: 56}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1436158552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436158550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1436158553
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436158550}
+  m_CullTransparentMesh: 1
 --- !u!224 &1436377234 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6004777132549753555, guid: 801413460d155dc4cafe68bad3315a1d,
@@ -15697,6 +15962,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15713,6 +15979,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15729,6 +15996,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15745,6 +16013,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15762,6 +16031,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15778,6 +16048,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15795,6 +16066,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15812,6 +16084,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15829,6 +16102,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15846,6 +16120,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15862,6 +16137,25 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 1
+    showPenguinLock: 0
+    canClickThroughPanel: 0
+    turnOnCoolDown: 0
+    playerCanMove: 0
+    playerCanJump: 0
+    canStartSpawningCoin: 0
+    coinCanStartMoving: 0
+    coinMoveSlowly: 0
+    coinsToSpawnBeforeNextStep: 0
+    showStopButton: 0
+  - stepType: 1
+    callOut: {fileID: 1761031638}
+    sentence: Messenger button will be disabled when the correct ingredient is the
+      first slot.
+    targetObject: {fileID: 842555942}
+    clicked: 0
+    summonCanContinue: 0
+    needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -15878,6 +16172,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 1
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 1
     playerCanMove: 0
@@ -17101,6 +17396,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1558836944}
   m_CullTransparentMesh: 0
+--- !u!1 &1559399558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1559399559}
+  - component: {fileID: 1559399561}
+  - component: {fileID: 1559399560}
+  m_Layer: 8
+  m_Name: Icy Lock  Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1559399559
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559399558}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1436158551}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -0.19999695}
+  m_SizeDelta: {x: 55, y: 55}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1559399560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559399558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 5720c640ac798394199d6427a632bdb6, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1559399561
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559399558}
+  m_CullTransparentMesh: 1
 --- !u!1 &1560455790
 GameObject:
   m_ObjectHideFlags: 0
@@ -18590,8 +18960,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 233.4, y: -176.35}
-  m_SizeDelta: {x: 333.3927, y: 213.653}
+  m_AnchoredPosition: {x: 233.4, y: -167.56}
+  m_SizeDelta: {x: 333.3927, y: 241.36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1683268334
 GameObject:
@@ -18645,6 +19015,7 @@ MonoBehaviour:
   - {fileID: 2111114061}
   - {fileID: 696050465}
   completedTutorials: []
+  next_Step: {fileID: 0}
   managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   typingSpeed: 0.02
@@ -18706,6 +19077,7 @@ MonoBehaviour:
   craftingManager: {fileID: 576501842}
   orderMan: {fileID: 1204447452}
   managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
+  penguinLockImage: {fileID: 1436158552}
 --- !u!1 &1692100065
 GameObject:
   m_ObjectHideFlags: 0
@@ -18799,7 +19171,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1694799846
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19097,6 +19469,7 @@ GameObject:
   - component: {fileID: 1718915786}
   - component: {fileID: 1718915785}
   - component: {fileID: 1718915788}
+  - component: {fileID: 1718915789}
   m_Layer: 5
   m_Name: CollectingMiniGameButton
   m_TagString: Untagged
@@ -19231,6 +19604,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ede62e519837e489fea05e5f94247e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
+--- !u!114 &1718915789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718915783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 732b923c04bda254189720c150beb725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityButton: {fileID: 1718915786}
+  abilityButtonImage: {fileID: 0}
+  abilityImage: {fileID: 214375067}
+  abilitySlotNum: 0000000001000000
   managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
 --- !u!1 &1721466550
 GameObject:
@@ -19929,6 +20319,7 @@ RectTransform:
   - {fileID: 957025593}
   - {fileID: 1975838506}
   - {fileID: 1239777193}
+  - {fileID: 1436158551}
   m_Father: {fileID: 1218400193}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20050,6 +20441,12 @@ Transform:
   m_Father: {fileID: 723197337}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1800053097 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4843915422355632630, guid: 3b3d55cc30644644bb5d0a39295f90e6,
+    type: 3}
+  m_PrefabInstance: {fileID: 284455393}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1805652575
 GameObject:
   m_ObjectHideFlags: 0
@@ -20666,20 +21063,22 @@ MonoBehaviour:
   mainCanvas: {fileID: 920412566}
   workIDCanvas: {fileID: 876551463}
   bgCanvas: {fileID: 495509392}
-  inputText: {fileID: 606034908}
+  workerIDInputField: {fileID: 1800053097}
   placeHolder: {fileID: 1303976058}
   validatorText: {fileID: 1696743253}
   errorMessageText: {fileID: 2112200103}
+  workerIDText: {fileID: 606034910}
   errorMessagePanel: {fileID: 1917862669}
   dataMiner: {fileID: 1545319385}
   isPausedByFocusLoss: 0
-  inTestingMode: 1
+  inTestingMode: 0
   collectingGame: {fileID: 362793371}
   endGameScreen: {fileID: 514094310}
   mainGame: {fileID: 723197336}
   managerHub: {fileID: 11400000, guid: df32c749f3dc37248b57a6a2df45f300, type: 2}
-  progressType: 1
-  tutorialType: 0
+  minimumLevelsToBeatGame: 5
+  progressType: 0
+  tutorialType: 2
 --- !u!1 &1879141746
 GameObject:
   m_ObjectHideFlags: 0
@@ -21970,9 +22369,10 @@ MonoBehaviour:
   mainGame: {fileID: 723197336}
   firstTimeUsePenguin: 0
   penguinItemSuccessfullyDropped: 0
-  penguinButton: {fileID: 366598015}
-  penguinImage: {fileID: 824715476}
   penguinSlot: -1
+  iceBlue: {r: 0.69, g: 1, b: 1, a: 1}
+  iceLockImg: {fileID: 21300000, guid: 5720c640ac798394199d6427a632bdb6, type: 3}
+  messengerIsOut: 0
 --- !u!114 &2018983628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22148,7 +22548,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: You have unlocked the penguin!
+  m_Text: If You try to drag the wrong ingredient, it will show a blue lock, preventing
+    the wrong ingredient drop.
 --- !u!222 &2031162048
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -22819,6 +23220,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -22835,6 +23237,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -22851,6 +23254,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -22867,6 +23271,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -22883,6 +23288,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -22900,6 +23306,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -22917,6 +23324,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -22933,6 +23341,7 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
@@ -22949,7 +23358,26 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 1
+    turnOnCoolDown: 0
+    playerCanMove: 0
+    playerCanJump: 0
+    canStartSpawningCoin: 0
+    coinCanStartMoving: 0
+    coinMoveSlowly: 0
+    coinsToSpawnBeforeNextStep: 0
+    showStopButton: 1
+  - stepType: 1
+    callOut: {fileID: 1681909262}
+    sentence: ' Timing button will be disabled when the correct ingredients are in
+      the third and last slots.'
+    targetObject: {fileID: 803200179}
+    clicked: 0
+    summonCanContinue: 0
+    needSummon: 0
+    showPenguinLock: 0
+    canClickThroughPanel: 0
     turnOnCoolDown: 0
     playerCanMove: 0
     playerCanJump: 0
@@ -22965,8 +23393,9 @@ MonoBehaviour:
     clicked: 0
     summonCanContinue: 0
     needSummon: 0
+    showPenguinLock: 0
     canClickThroughPanel: 0
-    turnOnCoolDown: 0
+    turnOnCoolDown: 1
     playerCanMove: 0
     playerCanJump: 0
     canStartSpawningCoin: 0
@@ -23236,8 +23665,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.14, y: 12.6}
-  m_SizeDelta: {x: 208.12, y: 65.3001}
+  m_AnchoredPosition: {x: 0.4547, y: 12.2078}
+  m_SizeDelta: {x: 219.7731, y: 91.7377}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2132790274
 MonoBehaviour:
@@ -23272,7 +23701,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: You have unlocked the ability to collect coins to fill slots!
+  m_Text: Collecting button will be disabled when the correct ingredients are in
+    the third and last slots.
 --- !u!222 &2132790275
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -23721,6 +24151,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1351995473881903001, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1351995473881903001, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
+        type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 5e438345dac9f6d4b888d57e096747fe, type: 2}
@@ -23735,6 +24170,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 87cabf4ed3a666c49ade16788fff7966,
         type: 3}
+    - target: {fileID: 1351995473881903003, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1351995473881903003, guid: 3dbd34d824a6ed5489f0720df4ef85b8,
         type: 3}
       propertyPath: m_Animation
